@@ -12,7 +12,8 @@ import { PineconeService } from '../pinecone/pinecone/pinecone.service';
 
 @Injectable()
 export class MovieService {
-  private readonly embeddingApiUrl = 'http://127.0.0.1:5000/embed';
+  // private readonly embeddingApiUrl = 'http://127.0.0.1:5000/embed';
+  private readonly embeddingApiUrl = 'https://python-embedding-service.onrender.com/embed';
   constructor(
     private readonly pineconeService: PineconeService,
 
