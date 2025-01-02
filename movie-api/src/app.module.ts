@@ -8,6 +8,7 @@ import { PeopleModule } from './modules/people/people.module';
 import { ConfigModule } from '@nestjs/config';
 import { PineconeModule } from './modules/pinecone/pinecone/pinecone.module';
 import { UserModule } from './modules/User/user.module';
+import { LlmsearchModule } from './modules/llmsearch/llmsearch.module';
 
 @Module({
   controllers: [AppController],
@@ -22,7 +23,8 @@ import { UserModule } from './modules/User/user.module';
     MovieModule,
     PeopleModule,
     UserModule,
-    PineconeModule
+    PineconeModule,
+    LlmsearchModule
   ],
 })
 export class AppModule { }
