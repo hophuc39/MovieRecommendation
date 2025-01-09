@@ -1,20 +1,35 @@
-import { Box, Grid } from "@radix-ui/themes"
 
-import { Movie } from "../types/movie";
-
-interface MoviesListProps {
-  movies: Movie[];
+interface MovieListProps {
+  movies: any[];
 }
 
-const MoviesList = ({ movies }: MoviesListProps) => (
-  <Grid columns="3" gap="3" rows="repeat(2, 64px)" width="auto">
-    {movies.map((movie) => (
-      <Box key={movie.id} css={{ backgroundColor: 'white', padding: '1rem' }}>
-        <h2>{movie.title}</h2>
-        <p>{movie.overview}</p>
-      </Box>
-    ))}
-  </Grid>
-);
+const MovieList = ({ movies }: MovieListProps) => {
+  return (
+    <div className="relative">
+      <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+        {movies.map((movie) => (
+          <div
+            key={movie.id}
+            className="flex-none w-[150px]"
+          >
+            <div className="rounded-lg overflow-hidden shadow-lg">
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                className="w-full h-[225px] object-cover"
+              />
+              <div className="p-2">
+                <h3 className="font-bold text-sm truncate" title={movie.title}>
+                  {movie.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{movie.release_date}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-export default MoviesList;
+export default MovieList;

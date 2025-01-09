@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBHMmKDOEdt4uhEtgRqWv7CN0itnXY6j4M",
-  authDomain: "final-project-auth-10cd6.firebaseapp.com",
-  projectId: "final-project-auth-10cd6",
-  storageBucket: "final-project-auth-10cd6.firebasestorage.app",
-  messagingSenderId: "113698670531",
-  appId: "1:113698670531:web:70762d917162a7d6705f76",
-  measurementId: "G-3FM9F1M9ND"
+  apiKey: "AIzaSyDTPpVjMY23QRAX-Jg0irwgCxCvgu8JZMc",
+  authDomain: "movie-recommendation-ee697.firebaseapp.com",
+  projectId: "movie-recommendation-ee697",
+  storageBucket: "movie-recommendation-ee697.firebasestorage.app",
+  messagingSenderId: "802687764133",
+  appId: "1:802687764133:web:0863417e63272230556f4c",
+  measurementId: "G-788PT6JP4S"
 };
 
 const app = initializeApp(firebaseConfig);

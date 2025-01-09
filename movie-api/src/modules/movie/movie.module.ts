@@ -8,6 +8,7 @@ import { MovieGenreSchema } from './schemas/movie-genre.schema';
 import { MovieTredingDaySchema } from './schemas/movie-trending-day.schema';
 import { MovieTredingWeekSchema } from './schemas/movie-trending-week.schema';
 import { PineconeModule } from '../pinecone/pinecone.module';
+import { FirebaseModule } from '../firebase/firebase.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { PineconeModule } from '../pinecone/pinecone.module';
       { name: "MovieTrendingDay", schema: MovieTredingDaySchema },
       { name: "MovieTrendingWeek", schema: MovieTredingWeekSchema }
     ]),
-    PineconeModule
+    PineconeModule,
+    FirebaseModule
   ],
   providers: [MovieService],
   controllers: [MovieController]

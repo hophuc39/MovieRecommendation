@@ -6,6 +6,7 @@ import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 export class FirebaseService {
 
   constructor() {
+    console.log('FirebaseService is being initialized');
     if (!admin.apps.length) {
       admin.initializeApp({
         credential: admin.credential.cert(require("../../../config/firebase-service-account.json")),

@@ -11,7 +11,7 @@ export class MovieController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
-    return await this.movieService.getAllMovies(null, limit=limit, offset=offset);
+    return await this.movieService.getAllMovies(null, limit = limit, offset = offset);
   }
 
   @Get('genres')
@@ -27,7 +27,7 @@ export class MovieController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
-    return await this.movieService.getAllMoviesTrendingDay(null, limit=limit, offset=offset);
+    return await this.movieService.getAllMoviesTrendingDay(null, limit = limit, offset = offset);
   }
 
   @Get('trending/week')
@@ -36,7 +36,7 @@ export class MovieController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
-    return await this.movieService.getAllMoviesTrendingWeek(null, limit=limit, offset=offset);
+    return await this.movieService.getAllMoviesTrendingWeek(null, limit = limit, offset = offset);
   }
 
   @Get('recommend')
