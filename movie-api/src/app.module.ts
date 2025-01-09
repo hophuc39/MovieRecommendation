@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MovieModule } from './modules/movie/movie.module';
 import { PeopleModule } from './modules/people/people.module';
 import { ConfigModule } from '@nestjs/config';
-import { PineconeModule } from './modules/pinecone/pinecone/pinecone.module';
+import { PineconeModule } from './modules/pinecone/pinecone.module';
 import { UserModule } from './modules/User/user.module';
 import { LlmsearchModule } from './modules/llmsearch/llmsearch.module';
 

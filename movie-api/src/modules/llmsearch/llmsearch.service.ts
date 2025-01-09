@@ -18,7 +18,7 @@ export class LlmsearchService {
         const geminiApiKey = this.apikey;
         const url = 'https://awd-llm.azurewebsites.net/retriever/';
         const params = {
-            gemini_api_key: geminiApiKey,
+            llm_api_key: geminiApiKey,
             collection_name: collectionName,
             query: query,
             amount: amount || 25, // default value
@@ -35,7 +35,7 @@ export class LlmsearchService {
             );
             return response.data.data;
         } catch (error) {
-            console.error('Error fetching data:', error.message);
+            console.error('Error fetching data:', error);
             throw new Error('Failed to fetch data');
         }
     }
