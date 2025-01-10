@@ -12,7 +12,6 @@ const TrendingMovies = () => {
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        // Fetch cả 2 loại dữ liệu ngay từ đầu
         const [dayData, weekData] = await Promise.all([
           getTrendingMoviesDay(),
           getTrendingMoviesWeek()
@@ -26,7 +25,7 @@ const TrendingMovies = () => {
     };
 
     fetchMovies();
-  }, []); // Chỉ fetch một lần khi component mount
+  }, []);
 
   return (
     <div>
@@ -51,7 +50,7 @@ const TrendingMovies = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div>
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400/30 scrollbar-track-transparent">
           <div className={timeWindow === 'day' ? 'block' : 'hidden'}>
             <MovieList movies={dayMovies} />
           </div>

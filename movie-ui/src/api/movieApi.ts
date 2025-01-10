@@ -19,3 +19,8 @@ export const getTrendingMoviesWeek = async (limit: number = 20, offset: number =
   });
   return response.data.items;
 };
+
+export const getLatestTrailers = async () => {
+  const response = await axiosInstance.get('/movies/latest-trailers');
+  return response.data;
+};

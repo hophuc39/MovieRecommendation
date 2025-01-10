@@ -46,4 +46,9 @@ export class MovieController {
   ) {
     return this.movieService.getMovieSuggestions(query, topK);
   }
+
+  @Get('latest-trailers')
+  async getLatestTrailers() {
+    return this.movieService.getLatestTrailers();
+  }
 }

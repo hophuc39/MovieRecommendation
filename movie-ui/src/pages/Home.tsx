@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import TrendingMovies from "../components/TrendingMovies";
+import LatestTrailers from "../components/LatestTrailers";
 
 const Home = () => {
   return (
@@ -33,6 +34,9 @@ const Home = () => {
       <div className="max-w-8xl mx-auto px-4 py-12">
         <TrendingMovies />
       </div>
+
+      {/* Latest Trailers Section */}
+      <LatestTrailers />
     </div>
   );
 };
