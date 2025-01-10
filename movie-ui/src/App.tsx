@@ -12,6 +12,9 @@ import PrivateRoute from './pages/PrivateRoute';
 import SearchMovies from './pages/SearchMovie';
 import Dashboard from './pages/Dashboard';
 import { LoadingProvider } from './contexts/LoadingContext';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -55,6 +58,9 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
         </Router>
         <ToastContainer

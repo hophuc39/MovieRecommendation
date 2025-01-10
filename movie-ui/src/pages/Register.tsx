@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useNavigate, Link } from "react-router";
 import { Text, Flex, TextField, Button } from "@radix-ui/themes";
 import { toast } from 'react-toastify';
@@ -77,9 +77,10 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      toast.success('Account created successfully!');
-      navigate("/");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
+      toast.success('Verification email sent! Please check your inbox.');
+      navigate('/verify-email');
     } catch (err: any) {
       const friendlyErrorMessage = getFriendlyErrorMessage(err.code);
       setError(friendlyErrorMessage);

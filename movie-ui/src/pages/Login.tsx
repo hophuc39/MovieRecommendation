@@ -199,13 +199,15 @@ const Login = () => {
               )}
             </Button>
 
-            <Flex align="center" justify="center" gap="2" mt="4">
-              <Text size="2" color="gray">
-                Don't have an account?
-              </Text>
+            <Flex align="center" justify="between" gap="2" mt="4">
               <Link to="/register" style={{ textDecoration: 'none' }}>
                 <Text size="2" color="blue" style={{ cursor: 'pointer' }}>
-                  Register here
+                  Create account
+                </Text>
+              </Link>
+              <Link to="/forgot-password" style={{ textDecoration: 'none' }}>
+                <Text size="2" color="blue" style={{ cursor: 'pointer' }}>
+                  Forgot password?
                 </Text>
               </Link>
             </Flex>

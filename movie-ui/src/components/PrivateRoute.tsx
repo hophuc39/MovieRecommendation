@@ -13,12 +13,17 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
 
   if (loading) {
     showLoading();
+    return null;
   } else {
     hideLoading();
   }
 
   if (!user) {
     return <Navigate to="/login" />;
+  }
+
+  if (user.providerData[0].providerId === 'password' && !user.emailVerified) {
+    return <Navigate to="/verify-email" />;
   }
 
   return <>{children}</>;
