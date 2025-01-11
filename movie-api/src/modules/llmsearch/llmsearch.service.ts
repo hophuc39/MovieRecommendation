@@ -6,10 +6,51 @@ import { lastValueFrom } from 'rxjs';
 export class LlmsearchService {
     constructor(
         private readonly httpService: HttpService,
-    ) { }
+    ) {    
+        try {
+            console.log('Checking LLM API status...');
+            if(this.healthCheck())
+                console.log("Service is healthy")
+            this.setupInterceptors();
+        } catch (error) {
+            console.error(error.message);
+        }
+        
+     }
+
+     private setupInterceptors() {
+        this.httpService.axiosRef.interceptors.request.use((config) => {
+          console.log('Final URL:', config.url); // URL cuối cùng
+          console.log('Method:', config.method); // Phương thức HTTP
+          console.log('Headers:', config.headers); // Header của request
+          console.log('Body:', config.data); // Body của request (nếu có)
+          return config;
+        }, (error) => {
+          console.error('Request Error:', error);
+          return Promise.reject(error);
+        });
+      }
     private apikey = process.env.LLM_API_KEY;
     private url = process.env.LLM_API_URL || "http://awd-llm.azurewebsites.net";
-
+    
+    async healthCheck(): Promise<any>{
+        const url = this.url + "/healthy";
+        try {
+            const response = await lastValueFrom(
+                this.httpService.get(url, {
+                    headers: {
+                        accept: 'application/json',
+                    },
+                }),
+            );
+            if(response.data.status === 200)
+                return true;
+            else return false
+        } catch (error) {
+            console.error('Error fetching collections:', error.message);
+        }
+    }
+    
     async fetchCollections(): Promise<any>{
         const url = this.url + "/knowledge-base/collections";
         try {
@@ -59,31 +100,38 @@ export class LlmsearchService {
         }
     }
 
-    async fetchNavigate(query: string): Promise<any> {
+    async fetchNavigate(Nquery: string): Promise<any> {
         const ApiKey = this.apikey;
-        const url = this.url + "/navigate";
-        const params = {
-            llm_api_key: ApiKey,
-            query: query,
-        };
-        const data = {};
+        // const url = this.url + "/navigate";
+        // const data = { key: 'value' };
+        // const config = {
+        //   params: {             
+        //     llm_api_key: ApiKey,
+        //     query: query, }, 
+        //   headers: {'Content-Type': 'application/json'  },
+          
+        // };
+        // try {
+        //     const response = await lastValueFrom(
+        //         this.httpService.get(url,config)
+        //     );
+        //     return response.data;
+        // } catch (error) {
+        //     console.error(error.message);
+        //     throw new Error('Failed to fetch navigation data');
+        // }
+        const url = this.url + '/navigate/';
+        const params = { llm_api_key: this.apikey, query: Nquery };
+        const headers = { accept: 'application/json' };
+    
         try {
-            const response = await lastValueFrom(
-                // this.httpService.post(url, {null,
-                //     params,
-                //     headers: {
-                //         accept: 'application/json',
-                //     },
-                // }),
-                this.httpService.post(url, undefined, {
-                    params: { key: 'value' }, // Query params (nếu có)
-                    headers: {  accept: 'application/json', }, // Headers (nếu cần)
-                  })
-            );
-            return response.data;
+          const response = await lastValueFrom(
+            this.httpService.post(url, {}, { params, headers }),
+          );
+          return response.data;
         } catch (error) {
-            console.error(error);
-            throw new Error('Failed to fetch navigation data');
+          console.error('Error:', error.message);
+          throw error;
         }
     }
     

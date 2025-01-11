@@ -39,7 +39,8 @@ export class LlmsearchController {
   ) {
     try {
       console.log("navigate success = ", query,".")
-      return await this.llmService.fetchNavigate(query);
+      const res = await this.llmService.fetchNavigate(query);
+      return res.data;
     } catch (error) {
       console.error('Error fetching navigate:', error.message);
     }
