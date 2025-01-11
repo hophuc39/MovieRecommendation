@@ -3,7 +3,7 @@ import { LlmsearchService } from './llmsearch.service';
 
 @Controller('llmsearch')
 export class LlmsearchController {
-  constructor(private readonly llmService: LlmsearchService) {}
+  constructor(private readonly llmService: LlmsearchService) { }
 
   @Get('collections')
   async getCollection(){

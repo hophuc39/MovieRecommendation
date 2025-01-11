@@ -5,4 +5,4 @@ import { PineconeService } from './pinecone.service';
     providers: [PineconeService],
     exports: [PineconeService]
 })
-export class PineconeModule {}
+export class PineconeModule { }

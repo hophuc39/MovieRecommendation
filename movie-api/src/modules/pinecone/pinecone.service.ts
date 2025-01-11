@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Pinecone } from '@pinecone-database/pinecone';
+import { Index, Pinecone, RecordMetadata } from '@pinecone-database/pinecone';
 
 @Injectable()
 export class PineconeService {
     private pinecone: Pinecone;
-    private index;
+    private index: Index<RecordMetadata>;
 
     constructor() {
         this.pinecone = new Pinecone({

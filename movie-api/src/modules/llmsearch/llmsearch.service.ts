@@ -54,7 +54,7 @@ export class LlmsearchService {
             );
             return response.data.data;
         } catch (error) {
-            console.error('Error fetching data:', error.message);
+            console.error('Error fetching data:', error);
             throw new Error('Failed to fetch data');
         }
     }

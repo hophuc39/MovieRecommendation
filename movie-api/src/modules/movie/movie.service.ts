@@ -8,7 +8,7 @@ import { MovieGenre } from './schemas/movie-genre.schema';
 import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
 import { MovieTrendingWeek } from './schemas/movie-trending-week.schema';
 import axios from 'axios';
-import { PineconeService } from '../pinecone/pinecone/pinecone.service';
+import { PineconeService } from '../pinecone/pinecone.service';
 
 @Injectable()
 export class MovieService {

@@ -7,7 +7,7 @@ import { MovieController } from './movie.controller';
 import { MovieGenreSchema } from './schemas/movie-genre.schema';
 import { MovieTredingDaySchema } from './schemas/movie-trending-day.schema';
 import { MovieTredingWeekSchema } from './schemas/movie-trending-week.schema';
-import { PineconeModule } from '../pinecone/pinecone/pinecone.module';
+import { PineconeModule } from '../pinecone/pinecone.module';
 
 @Module({
   imports: [

@@ -8,7 +8,7 @@ export class FirebaseAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const authorization = request.headers["authorization"];
+    const authorization = request.headers["Authorization"];
 
     if (!authorization || !authorization.startsWith('Bearer ')) {
       throw new UnauthorizedException("Missing or invalid authorization header");
