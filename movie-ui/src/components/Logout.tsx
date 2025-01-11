@@ -8,9 +8,12 @@ const Logout = () => {
   };
 
   return (
-    <div>
-        <button className="btn-signout" onClick={handleLogout}>Logout</button>
-    </div>
+    <button
+      onClick={handleLogout}
+      className="text-white hover:text-tmdbLightBlue transition-colors duration-200 font-medium"
+    >
+      Logout
+    </button>
   );
 };
 

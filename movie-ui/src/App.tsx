@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -9,6 +11,10 @@ import MovieDetail from './pages/MovieDetail';
 import PrivateRoute from './pages/PrivateRoute';
 import SearchMovies from './pages/SearchMovie';
 import Dashboard from './pages/Dashboard';
+import { LoadingProvider } from './contexts/LoadingContext';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -33,27 +39,44 @@ function App() {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
-          {/* <Route path="/trending" element={<TrendingMovies />} /> */}
-          <Route path="/movie/:id" element={<MovieDetail />} />
-          <Route path="/search" element={<SearchMovies />} />
+    <LoadingProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* <Route path="/trending" element={<TrendingMovies />} /> */}
+            <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/search" element={<SearchMovies />} />
 
-          <Route
-            path='/dashboard'
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+            <Route
+              path='/dashboard'
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Routes>
+        </Router>
+        <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </QueryClientProvider>
+    </LoadingProvider>
   )
 }
 

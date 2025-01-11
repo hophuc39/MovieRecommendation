@@ -71,4 +71,8 @@ export class MovieService {
   async getAllMoviesTrendingWeek(filter: FilterQuery<MovieTrendingWeek> = {}, limit?: number, offset?: number): Promise<PaginationResult<MovieTrendingWeek>> {
     return paginate<MovieTrendingWeek>(this.movieTrendingWeekModel, filter, limit, offset);
   }
+
+  async getLatestTrailers(): Promise<Movie[]> {
+    return this.movieModel.find().sort({ 'trailers.publishedAt': -1 }).limit(5).exec();
+  }
 }

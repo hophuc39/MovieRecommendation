@@ -76,5 +76,15 @@ export type Movie = {
       department: string;
       job: string;
     }[];
+
   };
+  trailers: {
+    id: string;
+    iso6391: string;
+    iso31661: string;
+    key: string;
+    name: string;
+    official: boolean;
+    publishedAt: string;
+  }[];
 }
