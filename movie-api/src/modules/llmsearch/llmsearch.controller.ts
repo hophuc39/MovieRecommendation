@@ -33,8 +33,6 @@ export class LlmsearchController {
     }
   }
 
-<<<<<<< Updated upstream
-=======
   @Get('getMovieSuggestion')
   async llmSearchMovie(
     @Query('query') query: string,
@@ -48,13 +46,12 @@ export class LlmsearchController {
     }
   }
 
->>>>>>> Stashed changes
   @Get('navigate')
   async navigate(
     @Query('query') query: string,
   ) {
     try {
-      console.log("navigate success = ", query, ".")
+      console.log("navigate query = \"", query, "\"")
       const res = await this.llmService.fetchNavigate(query);
       return res.data;
     } catch (error) {

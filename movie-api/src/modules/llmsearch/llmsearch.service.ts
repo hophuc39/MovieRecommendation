@@ -11,29 +11,13 @@ export class LlmsearchService {
             console.log('Checking LLM API status...');
             if (this.healthCheck())
                 console.log("Service is healthy")
-            this.setupInterceptors();
+            // this.setupInterceptors();
         } catch (error) {
             console.error(error.message);
         }
 
     }
 
-<<<<<<< Updated upstream
-    private setupInterceptors() {
-        this.httpService.axiosRef.interceptors.request.use((config) => {
-            console.log('Final URL:', config.url); // URL cuối cùng
-            console.log('Method:', config.method); // Phương thức HTTP
-            console.log('Headers:', config.headers); // Header của request
-            console.log('Body:', config.data); // Body của request (nếu có)
-            return config;
-        }, (error) => {
-            console.error('Request Error:', error);
-            return Promise.reject(error);
-        });
-    }
-    private apikey = process.env.LLM_API_KEY;
-    private url = process.env.LLM_API_URL || "https://awd-llm.azurewebsites.net";
-=======
     //  private setupInterceptors() {
     //     this.httpService.axiosRef.interceptors.request.use((config) => {
     //       console.log('Final URL:', config.url); // URL cuối cùng
@@ -48,7 +32,6 @@ export class LlmsearchService {
     //   }
     private apikey = process.env.LLM_API_KEY;
     private url = process.env.LLM_API_URL || "http://awd-llm.azurewebsites.net";
->>>>>>> Stashed changes
 
     async healthCheck(): Promise<any> {
         const url = this.url + "/healthy";
@@ -120,18 +103,11 @@ export class LlmsearchService {
     async fetchNavigate(Nquery: string): Promise<any> {
         const url = this.url + '/navigate/';
         const params = { llm_api_key: this.apikey, query: Nquery };
-<<<<<<< Updated upstream
-
-        try {
-            const response = await lastValueFrom(
-                this.httpService.post(url, {}, { params, headers: { 'Content-Type': 'application/json' } }),
-=======
         const headers = { accept: 'application/json' };
 
         try {
             const response = await lastValueFrom(
                 this.httpService.post(url, {}, { params, headers }),
->>>>>>> Stashed changes
             );
             return response.data;
         } catch (error) {
@@ -139,8 +115,6 @@ export class LlmsearchService {
             throw error;
         }
     }
-<<<<<<< Updated upstream
-=======
     async searchMovies(query: string, amount?: number, threshold?: number) {
         try {
             const queryResponse = await this.fetchData("movies",query, amount ??10, threshold??0.5);
@@ -169,6 +143,5 @@ export class LlmsearchService {
             throw error;
         }
     }
->>>>>>> Stashed changes
 
 }
