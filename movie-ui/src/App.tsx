@@ -15,6 +15,9 @@ import { LoadingProvider } from './contexts/LoadingContext';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import FullCastCrew from './pages/FullCastCrew';
+import Favorites from './pages/Favorites';
+import Watchlist from './pages/Watchlist';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -61,6 +64,23 @@ function App() {
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/movie/:id/cast" element={<FullCastCrew />} />
+            <Route
+              path="/favorites"
+              element={
+                <PrivateRoute>
+                  <Favorites />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/watchlist"
+              element={
+                <PrivateRoute>
+                  <Watchlist />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </Router>
         <ToastContainer

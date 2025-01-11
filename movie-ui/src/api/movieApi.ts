@@ -24,3 +24,18 @@ export const getLatestTrailers = async () => {
   const response = await axiosInstance.get('/movies/latest-trailers');
   return response.data;
 };
+
+export const getMovieDetail = async (movieId: string) => {
+  const response = await axiosInstance.get(`/movies/${movieId}`);
+  return response.data;
+};
+
+export const getMovieCredits = async (movieId: string) => {
+  const response = await axiosInstance.get(`/movies/${movieId}/credits`);
+  return response.data;
+};
+
+export const getSimilarMovies = async (movieId: string) => {
+  const response = await axiosInstance.get(`/movies/${movieId}/similar`);
+  return response.data;
+};

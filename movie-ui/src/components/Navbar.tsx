@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useLoading } from "../contexts/LoadingContext";
-
 import { auth } from "../firebaseSetup";
-import Logout from "./Logout";
 import tmdbLogo from "../assets/tmdb-logo.png";
 import SearchContainer from "./SearchContainer";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -77,9 +76,7 @@ const Navbar = () => {
                       </svg>
                     )}
                   </button>
-                  <div className="relative">
-                    <Logout />
-                  </div>
+                  <UserMenu />
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
@@ -101,7 +98,7 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      <SearchContainer isOpen={isSearchOpen} />
+      {user && <SearchContainer isOpen={isSearchOpen} />}
     </>
   );
 };

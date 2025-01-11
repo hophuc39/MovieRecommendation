@@ -1,7 +1,7 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
-import { FilterQuery, model, Model } from 'mongoose';
+import { FilterQuery, Model, ObjectId, Types } from 'mongoose';
 import { paginate } from '../../lib/helpers/pagination.helper';
 import { PaginationResult } from '../../lib/interfaces/pagination-result.interface';
 import { MovieGenre } from './schemas/movie-genre.schema';
@@ -74,5 +74,58 @@ export class MovieService {
 
   async getLatestTrailers(): Promise<Movie[]> {
     return this.movieModel.find().sort({ 'trailers.publishedAt': -1 }).limit(5).exec();
+  }
+
+  async getMovieDetail(id: string): Promise<any> {
+    console.log('Searching for TMDB ID:', id);
+
+    const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
+      .lean()
+      .exec();
+
+    console.log('Found movie:', movie);
+    return movie;
+  }
+
+  async getMovieCredits(id: string) {
+    const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
+      .select('credits')
+      .lean()
+      .exec();
+
+    return movie?.credits;
+  }
+
+  async getSimilarMovies(id: string, limit: number = 20, offset: number = 0) {
+    const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
+      .select('genres')
+      .lean()
+      .exec();
+
+    if (!movie) {
+      return { items: [], total: 0 };
+    }
+
+    const genreIds = movie.genres.map(g => g.id);
+
+    const similarMovies = await this.movieModel.find({
+      tmdb_id: { $ne: parseInt(id) },
+      'genres.id': { $in: genreIds }
+    })
+      .sort({ popularity: -1 })
+      .skip(offset)
+      .limit(limit)
+      .lean()
+      .exec();
+
+    const total = await this.movieModel.countDocuments({
+      tmdb_id: { $ne: parseInt(id) },
+      'genres.id': { $in: genreIds }
+    });
+
+    return {
+      items: similarMovies,
+      total
+    };
   }
 }

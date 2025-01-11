@@ -6,7 +6,7 @@ export type MovieDocument = HydratedDocument<Movie>;
 
 @Schema({ collection: 'movies' })
 export class Movie {
-  @Prop()
+  @Prop({ required: true })
   tmdbId: number;
 
   @Prop()

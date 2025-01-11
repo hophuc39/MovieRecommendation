@@ -1,5 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
-
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { MovieService } from './movie.service';
 
 @Controller('movies')
@@ -15,15 +14,12 @@ export class MovieController {
   }
 
   @Get('genres')
-  async getAllMovieGenres(
-
-  ) {
+  async getAllMovieGenres() {
     return await this.movieService.getAllMovieGenres();
   }
 
   @Get('trending/day')
   async getAllMoviesTrendingDay(
-
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
@@ -32,7 +28,6 @@ export class MovieController {
 
   @Get('trending/week')
   async getAllMoviesTrendingWeek(
-
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
@@ -50,5 +45,10 @@ export class MovieController {
   @Get('latest-trailers')
   async getLatestTrailers() {
     return this.movieService.getLatestTrailers();
+  }
+
+  @Get(':id')
+  async getMovieDetail(@Param('id') tmdbId: string) {
+    return this.movieService.getMovieDetail(tmdbId);
   }
 }
