@@ -15,7 +15,7 @@ export class LlmsearchController {
     }
   }
   @Get('search')
-  async search(
+  async llmsearch(
     @Query('collection_name') collectionName: string,
     @Query('query') query: string,
     @Query('amount') amount?: number,
@@ -33,6 +33,22 @@ export class LlmsearchController {
     }
   }
 
+<<<<<<< Updated upstream
+=======
+  @Get('getMovieSuggestion')
+  async llmSearchMovie(
+    @Query('query') query: string,
+  ) {
+    try {
+      return await this.llmService.searchMovies(
+        query,
+      );
+    } catch (error) {
+      console.error('Error fetching collections:', error.message);
+    }
+  }
+
+>>>>>>> Stashed changes
   @Get('navigate')
   async navigate(
     @Query('query') query: string,
