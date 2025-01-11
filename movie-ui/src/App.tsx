@@ -18,6 +18,7 @@ import ResetPassword from './pages/ResetPassword';
 import FullCastCrew from './pages/FullCastCrew';
 import Favorites from './pages/Favorites';
 import Watchlist from './pages/Watchlist';
+import PeopleDetail from './pages/PeopleDetail';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -81,6 +82,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/person/:id" element={<PeopleDetail />} />
           </Routes>
         </Router>
         <ToastContainer

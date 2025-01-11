@@ -153,18 +153,48 @@ const MovieDetail = () => {
             <div className="flex gap-4">
               {movie.credits?.cast?.slice(0, 10).map((person: any) => (
                 <div key={person.id} className="flex-none w-[140px]">
-                  <div className="rounded-lg overflow-hidden">
-                    <ProfileImage
-                      path={person.profile_path}
-                      name={person.name}
-                      className="w-full h-[175px] object-cover"
-                    />
-                  </div>
-                  <h3 className="mt-2 font-semibold">{person.name}</h3>
-                  <p className="text-sm text-gray-500">{person.character}</p>
+                  <Link to={`/person/${person.id}`} className="hover:opacity-75 transition-opacity">
+                    <div className="rounded-lg overflow-hidden">
+                      <ProfileImage
+                        path={person.profile_path}
+                        name={person.name}
+                        className="w-full h-[175px] object-cover"
+                        type="people"
+                      />
+                    </div>
+                    <h3 className="mt-2 font-semibold line-clamp-2">{person.name}</h3>
+                    <p className="text-sm text-gray-500 line-clamp-2">{person.character}</p>
+                  </Link>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Crew Section */}
+        <div className="max-w-8xl mx-auto px-4 pb-12">
+          <h2 className="text-2xl font-bold mb-6">Featured Crew</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {movie.credits?.crew?.filter((person: any) =>
+              ['Director', 'Screenplay', 'Story', 'Writer', 'Characters'].includes(person.job)
+            ).slice(0, 6).map((person: any) => (
+              <Link
+                key={person.id}
+                to={`/person/${person.id}`}
+                className="hover:opacity-75 transition-opacity"
+              >
+                <div className="rounded-lg overflow-hidden">
+                  <ProfileImage
+                    path={person.profile_path}
+                    name={person.name}
+                    className="w-full aspect-[2/3] object-cover"
+                    type="people"
+                  />
+                </div>
+                <h3 className="mt-2 font-semibold line-clamp-2">{person.name}</h3>
+                <p className="text-sm text-gray-500">{person.job}</p>
+              </Link>
+            ))}
           </div>
         </div>
 

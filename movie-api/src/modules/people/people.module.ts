@@ -3,13 +3,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { PeopleController } from './people.controller';
 import { PeopleService } from './people.service';
-import { PeopleSchema } from './schemas/people.schema';
+import { People, PeopleSchema } from './schemas/people.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([
-    { name: 'People', schema: PeopleSchema }
-  ])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: People.name, schema: PeopleSchema }
+    ])
+  ],
   controllers: [PeopleController],
-  providers: [PeopleService]
+  providers: [PeopleService],
+  exports: [PeopleService]
 })
 export class PeopleModule { }

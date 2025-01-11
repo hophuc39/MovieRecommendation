@@ -9,7 +9,7 @@ import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
 import { MovieTrendingWeek } from './schemas/movie-trending-week.schema';
 import axios from 'axios';
 import { PineconeService } from '../pinecone/pinecone.service';
-import { LlmsearchService  } from "src/modules/llmsearch/llmsearch.service";
+import { LlmsearchService } from "src/modules/llmsearch/llmsearch.service";
 @Injectable()
 export class MovieService {
   // private readonly embeddingApiUrl = 'http://127.0.0.1:5000/embed';
@@ -57,8 +57,8 @@ export class MovieService {
   }
 
   async getLLMMovieSuggestions(userQuery: string, amount?: number): Promise<any> {
-    const movieIds = await this.llmService.searchMovies(userQuery,10);
-    console.log("ids:",movieIds);
+    const movieIds = await this.llmService.searchMovies(userQuery, 10);
+    console.log("ids:", movieIds);
     const movies = await this.movieModel.find({ _id: { $in: movieIds } }).exec();
 
     const moviesWithScores = movies.map((movie) => {
@@ -91,13 +91,9 @@ export class MovieService {
   }
 
   async getMovieDetail(id: string): Promise<any> {
-    console.log('Searching for TMDB ID:', id);
-
     const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
       .lean()
       .exec();
-
-    console.log('Found movie:', movie);
     return movie;
   }
 

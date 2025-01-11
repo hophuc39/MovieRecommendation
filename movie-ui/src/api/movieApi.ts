@@ -39,3 +39,8 @@ export const getSimilarMovies = async (movieId: string) => {
   const response = await axiosInstance.get(`/movies/${movieId}/similar`);
   return response.data;
 };
+
+export const getPeopleDetail = async (id: string) => {
+  const response = await axiosInstance.get(`/people/${id}`);
+  return response.data;
+};
