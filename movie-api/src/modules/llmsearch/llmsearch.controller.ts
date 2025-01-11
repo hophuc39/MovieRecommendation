@@ -6,12 +6,12 @@ export class LlmsearchController {
   constructor(private readonly llmService: LlmsearchService) { }
 
   @Get('collections')
-  async getCollection(){
+  async getCollection() {
     try {
       return await this.llmService.fetchCollections();
-    
+
     } catch (error) {
-        console.error('Error fetching collections:', error.message);
+      console.error('Error fetching collections:', error.message);
     }
   }
   @Get('search')
@@ -31,14 +31,14 @@ export class LlmsearchController {
     } catch (error) {
       console.error('Error fetching collections:', error.message);
     }
-
   }
+
   @Get('navigate')
   async navigate(
     @Query('query') query: string,
   ) {
     try {
-      console.log("navigate success = ", query,".")
+      console.log("navigate success = ", query, ".")
       const res = await this.llmService.fetchNavigate(query);
       return res.data;
     } catch (error) {
