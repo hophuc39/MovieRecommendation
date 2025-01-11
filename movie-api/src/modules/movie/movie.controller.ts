@@ -51,4 +51,13 @@ export class MovieController {
   async getMovieDetail(@Param('id') tmdbId: string) {
     return this.movieService.getMovieDetail(tmdbId);
   }
+
+  @Get('llm-recommend')
+  async llmrecommendMovies(
+    @Query('query') query: string,
+    @Query('amount') amount: number = 10
+  ) {
+    return this.movieService.getLLMMovieSuggestions(query, amount);
+  }
 }
+

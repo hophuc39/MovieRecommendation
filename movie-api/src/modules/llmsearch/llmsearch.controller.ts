@@ -15,7 +15,7 @@ export class LlmsearchController {
     }
   }
   @Get('search')
-  async search(
+  async llmsearch(
     @Query('collection_name') collectionName: string,
     @Query('query') query: string,
     @Query('amount') amount?: number,
@@ -33,12 +33,25 @@ export class LlmsearchController {
     }
   }
 
+  @Get('getMovieSuggestion')
+  async llmSearchMovie(
+    @Query('query') query: string,
+  ) {
+    try {
+      return await this.llmService.searchMovies(
+        query,
+      );
+    } catch (error) {
+      console.error('Error fetching collections:', error.message);
+    }
+  }
+
   @Get('navigate')
   async navigate(
     @Query('query') query: string,
   ) {
     try {
-      console.log("navigate success = ", query, ".")
+      console.log("navigate query = \"", query, "\"")
       const res = await this.llmService.fetchNavigate(query);
       return res.data;
     } catch (error) {

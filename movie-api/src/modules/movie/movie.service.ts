@@ -9,14 +9,14 @@ import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
 import { MovieTrendingWeek } from './schemas/movie-trending-week.schema';
 import axios from 'axios';
 import { PineconeService } from '../pinecone/pinecone.service';
-
+import { LlmsearchService  } from "src/modules/llmsearch/llmsearch.service";
 @Injectable()
 export class MovieService {
   // private readonly embeddingApiUrl = 'http://127.0.0.1:5000/embed';
   private readonly embeddingApiUrl = 'https://python-embedding-service.onrender.com/embed';
   constructor(
     private readonly pineconeService: PineconeService,
-
+    private readonly llmService: LlmsearchService,
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
     @InjectModel(MovieGenre.name) private movieGenreModel: Model<MovieGenre>,
     @InjectModel(MovieTrendingDay.name) private movieTrendingDayModel: Model<MovieTrendingDay>,
@@ -50,6 +50,20 @@ export class MovieService {
         ...movie.toObject(),
         score: recommendation?.score,
         metadata: recommendation?.metadata
+      };
+    });
+
+    return { recommendations: moviesWithScores };
+  }
+
+  async getLLMMovieSuggestions(userQuery: string, amount?: number): Promise<any> {
+    const movieIds = await this.llmService.searchMovies(userQuery,10);
+    console.log("ids:",movieIds);
+    const movies = await this.movieModel.find({ _id: { $in: movieIds } }).exec();
+
+    const moviesWithScores = movies.map((movie) => {
+      return {
+        ...movie.toObject(),
       };
     });
 

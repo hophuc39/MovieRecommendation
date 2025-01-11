@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
 import { MovieService } from './movie.service';
 import { MovieSchema } from './schemas/movie.schema';
 import { MovieController } from './movie.controller';
@@ -9,6 +8,7 @@ import { MovieTredingDaySchema } from './schemas/movie-trending-day.schema';
 import { MovieTredingWeekSchema } from './schemas/movie-trending-week.schema';
 import { PineconeModule } from '../pinecone/pinecone.module';
 import { FirebaseModule } from '../firebase/firebase.module';
+import { LlmsearchModule } from '../llmsearch/llmsearch.module';
 
 @Module({
   imports: [
@@ -19,9 +19,10 @@ import { FirebaseModule } from '../firebase/firebase.module';
       { name: "MovieTrendingWeek", schema: MovieTredingWeekSchema }
     ]),
     PineconeModule,
-    FirebaseModule
+    FirebaseModule,
+    LlmsearchModule
   ],
   providers: [MovieService],
-  controllers: [MovieController]
+  controllers: [MovieController],
 })
 export class MovieModule { }
