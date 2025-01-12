@@ -2,25 +2,27 @@ interface ActionButtonProps {
   icon: string;
   tooltip: string;
   onClick: () => void;
+  isActive?: boolean;
 }
 
-const ActionButton = ({ icon, tooltip, onClick }: ActionButtonProps) => {
+const ActionButton = ({ icon, tooltip, onClick, isActive }: ActionButtonProps) => {
   return (
-    <div className="group relative">
+    <div className="relative group">
       <button
         onClick={onClick}
-        className="w-[46px] h-[46px] rounded-full bg-tmdbDarkBlue flex items-center justify-center 
-                 border border-white hover:bg-white transition-colors duration-200"
+        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors
+          ${isActive
+            ? 'bg-tmdbLightBlue border-tmdbLightBlue'
+            : 'bg-tmdbDarkBlue/20 border-white/20 hover:border-white'
+          }`}
       >
         <img
           src={icon}
-          alt={tooltip}
-          className="w-5 h-5 group-hover:filter group-hover:brightness-0"
+          alt=""
+          className={`w-5 h-5 ${isActive ? 'brightness-0 invert' : ''}`}
         />
       </button>
-      <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 
-                    transition-opacity duration-200 bottom-full left-1/2 -translate-x-1/2 mb-2 
-                    whitespace-nowrap bg-white text-tmdbDarkBlue text-sm py-1 px-2 rounded">
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-sm bg-gray-900 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
         {tooltip}
       </div>
     </div>

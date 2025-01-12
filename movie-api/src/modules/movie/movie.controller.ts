@@ -91,5 +91,53 @@ export class MovieController {
   ) {
     return this.movieService.createReview(id, reviewData, req.user);
   }
+
+  @Post(':id/watchlist')
+  @UseGuards(FirebaseAuthGuard)
+  async toggleWatchlist(
+    @Param('id') id: string,
+    @Req() req: any
+  ) {
+    return this.movieService.toggleWatchlist(id, req.user.uid);
+  }
+
+  @Post(':id/favorite')
+  @UseGuards(FirebaseAuthGuard)
+  async toggleFavorite(
+    @Param('id') id: string,
+    @Req() req: any
+  ) {
+    return this.movieService.toggleFavorite(id, req.user.uid);
+  }
+
+  @Get(':id/watchlist/status')
+  @UseGuards(FirebaseAuthGuard)
+  async checkWatchlistStatus(
+    @Param('id') id: string,
+    @Req() req: any
+  ) {
+    return this.movieService.isInWatchlist(id, req.user.uid);
+  }
+
+  @Get(':id/favorite/status')
+  @UseGuards(FirebaseAuthGuard)
+  async checkFavoriteStatus(
+    @Param('id') id: string,
+    @Req() req: any
+  ) {
+    return this.movieService.isInFavorites(id, req.user.uid);
+  }
+
+  @Get('user/watchlist')
+  @UseGuards(FirebaseAuthGuard)
+  async getWatchlist(@Req() req: any) {
+    return this.movieService.getWatchlist(req.user.uid);
+  }
+
+  @Get('user/favorites')
+  @UseGuards(FirebaseAuthGuard)
+  async getFavorites(@Req() req: any) {
+    return this.movieService.getFavorites(req.user.uid);
+  }
 }
 

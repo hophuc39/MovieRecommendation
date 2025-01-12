@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router';
-import { getMovieDetail } from '../api/movieApi';
+import { getMovieDetail, toggleMovieWatchlist, toggleMovieFavorite, isMovieInWatchlist, isMovieInFavorites } from '../api/movieApi';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseSetup';
 import Navbar from '../components/Navbar';
@@ -13,16 +13,52 @@ import bookmarkIcon from '../assets/icons/bookmark.svg';
 import ActionButton from '../components/ActionButton';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
+import { toast } from 'react-toastify';
 
 const MovieDetail = () => {
   const { id } = useParams();
   const [user] = useAuthState(auth);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: movie, isLoading, isError } = useQuery({
     queryKey: ['movie', id],
     queryFn: () => getMovieDetail(id as string),
     enabled: !!id
+  });
+
+  const { mutate: toggleWatchlist } = useMutation({
+    mutationFn: () => toggleMovieWatchlist(id as string),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['watchlist', id] });
+      toast.success('Watchlist updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update watchlist');
+    }
+  });
+
+  const { mutate: toggleFavorite } = useMutation({
+    mutationFn: () => toggleMovieFavorite(id as string),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites', id] });
+      toast.success('Favorites updated successfully');
+    },
+    onError: () => {
+      toast.error('Failed to update favorites');
+    }
+  });
+
+  const { data: isInWatchlist } = useQuery({
+    queryKey: ['watchlist', id],
+    queryFn: () => isMovieInWatchlist(id as string),
+    enabled: !!id && !!user
+  });
+
+  const { data: isInFavorites } = useQuery({
+    queryKey: ['favorites', id],
+    queryFn: () => isMovieInFavorites(id as string),
+    enabled: !!id && !!user
   });
 
   if (isLoading) {
@@ -76,13 +112,19 @@ const MovieDetail = () => {
   };
 
   const handleMarkAsFavorite = () => {
-    // TODO: Implement mark as favorite functionality
-    console.log('Mark as favorite clicked');
+    if (!user) {
+      toast.error('Please login to add to favorites');
+      return;
+    }
+    toggleFavorite();
   };
 
   const handleAddToWatchlist = () => {
-    // TODO: Implement add to watchlist functionality
-    console.log('Add to watchlist clicked');
+    if (!user) {
+      toast.error('Please login to add to watchlist');
+      return;
+    }
+    toggleWatchlist();
   };
 
   return (
@@ -136,16 +178,18 @@ const MovieDetail = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4">
                         <ActionButton
                           icon={heartIcon}
-                          tooltip="Mark as favorite"
+                          tooltip={isInFavorites ? "Remove from Favorites" : "Add to Favorites"}
                           onClick={handleMarkAsFavorite}
+                          isActive={isInFavorites}
                         />
                         <ActionButton
                           icon={bookmarkIcon}
-                          tooltip="Add to your watchlist"
+                          tooltip={isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
                           onClick={handleAddToWatchlist}
+                          isActive={isInWatchlist}
                         />
                       </div>
                     </div>

@@ -9,6 +9,8 @@ import { MovieTredingWeekSchema } from './schemas/movie-trending-week.schema';
 import { PineconeModule } from '../pinecone/pinecone.module';
 import { FirebaseModule } from '../firebase/firebase.module';
 import { LlmsearchModule } from '../llmsearch/llmsearch.module';
+import { WatchlistSchema } from './schemas/watchlist.schema';
+import { FavoriteSchema } from './schemas/favorite.schema';
 
 @Module({
   imports: [
@@ -16,7 +18,9 @@ import { LlmsearchModule } from '../llmsearch/llmsearch.module';
       { name: 'Movie', schema: MovieSchema },
       { name: "MovieGenre", schema: MovieGenreSchema },
       { name: "MovieTrendingDay", schema: MovieTredingDaySchema },
-      { name: "MovieTrendingWeek", schema: MovieTredingWeekSchema }
+      { name: "MovieTrendingWeek", schema: MovieTredingWeekSchema },
+      { name: "Watchlist", schema: WatchlistSchema },
+      { name: "Favorite", schema: FavoriteSchema }
     ]),
     PineconeModule,
     FirebaseModule,
@@ -24,5 +28,6 @@ import { LlmsearchModule } from '../llmsearch/llmsearch.module';
   ],
   providers: [MovieService],
   controllers: [MovieController],
+  exports: [MovieService]
 })
 export class MovieModule { }

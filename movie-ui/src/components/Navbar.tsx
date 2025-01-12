@@ -10,15 +10,8 @@ import { Link } from "react-router";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { showLoading, hideLoading } = useLoading();
-
-  if (loading) {
-    showLoading();
-  } else {
-    hideLoading();
-  }
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);

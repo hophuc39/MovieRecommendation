@@ -2,7 +2,6 @@ import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
 import { FilterQuery, Model, ObjectId, Types } from 'mongoose';
-import { paginate } from '../../lib/helpers/pagination.helper';
 import { PaginationResult } from '../../lib/interfaces/pagination-result.interface';
 import { MovieGenre } from './schemas/movie-genre.schema';
 import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
@@ -10,6 +9,9 @@ import { MovieTrendingWeek } from './schemas/movie-trending-week.schema';
 import axios from 'axios';
 import { PineconeService } from '../pinecone/pinecone.service';
 import { LlmsearchService } from "src/modules/llmsearch/llmsearch.service";
+import { Watchlist } from './schemas/watchlist.schema';
+import { Favorite } from './schemas/favorite.schema';
+
 @Injectable()
 export class MovieService {
   // private readonly embeddingApiUrl = 'http://127.0.0.1:5000/embed';
@@ -21,6 +23,8 @@ export class MovieService {
     @InjectModel(MovieGenre.name) private movieGenreModel: Model<MovieGenre>,
     @InjectModel(MovieTrendingDay.name) private movieTrendingDayModel: Model<MovieTrendingDay>,
     @InjectModel(MovieTrendingWeek.name) private movieTrendingWeekModel: Model<MovieTrendingWeek>,
+    @InjectModel(Watchlist.name) private watchlistModel: Model<Watchlist>,
+    @InjectModel(Favorite.name) private favoriteModel: Model<Favorite>
   ) {
   }
 
@@ -236,5 +240,75 @@ export class MovieService {
     await movie.save();
 
     return review;
+  }
+
+  async toggleWatchlist(movieId: string, userId: string): Promise<{ inWatchlist: boolean }> {
+    const exists = await this.watchlistModel.findOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+
+    if (!exists) {
+      await this.watchlistModel.create({
+        userId,
+        movieId: parseInt(movieId)
+      });
+      return { inWatchlist: true };
+    }
+
+    await this.watchlistModel.deleteOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+    return { inWatchlist: false };
+  }
+
+  async toggleFavorite(movieId: string, userId: string): Promise<{ isFavorite: boolean }> {
+    const exists = await this.favoriteModel.findOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+
+    if (!exists) {
+      await this.favoriteModel.create({
+        userId,
+        movieId: parseInt(movieId)
+      });
+      return { isFavorite: true };
+    }
+
+    await this.favoriteModel.deleteOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+    return { isFavorite: false };
+  }
+
+  async getWatchlist(userId: string): Promise<Movie[]> {
+    const watchlist = await this.watchlistModel.find({ userId }).lean();
+    const movieIds = watchlist.map(item => item.movieId);
+    return this.movieModel.find({ tmdb_id: { $in: movieIds } }).lean();
+  }
+
+  async getFavorites(userId: string): Promise<Movie[]> {
+    const favorites = await this.favoriteModel.find({ userId }).lean();
+    const movieIds = favorites.map(item => item.movieId);
+    return this.movieModel.find({ tmdb_id: { $in: movieIds } }).lean();
+  }
+
+  async isInWatchlist(movieId: string, userId: string): Promise<boolean> {
+    const exists = await this.watchlistModel.findOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+    return !!exists;
+  }
+
+  async isInFavorites(movieId: string, userId: string): Promise<boolean> {
+    const exists = await this.favoriteModel.findOne({
+      userId,
+      movieId: parseInt(movieId)
+    });
+    return !!exists;
   }
 }

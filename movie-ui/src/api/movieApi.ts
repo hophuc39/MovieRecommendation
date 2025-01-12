@@ -76,3 +76,33 @@ export const createMovieReview = async (movieId: string, data: { content: string
   const response = await axiosInstance.post(`/movies/${movieId}/reviews`, data);
   return response.data;
 };
+
+export const toggleMovieWatchlist = async (movieId: string) => {
+  const response = await axiosInstance.post(`/movies/${movieId}/watchlist`);
+  return response.data;
+};
+
+export const toggleMovieFavorite = async (movieId: string) => {
+  const response = await axiosInstance.post(`/movies/${movieId}/favorite`);
+  return response.data;
+};
+
+export const getWatchlist = async () => {
+  const response = await axiosInstance.get('/movies/user/watchlist');
+  return response.data;
+};
+
+export const getFavorites = async () => {
+  const response = await axiosInstance.get('/movies/user/favorites');
+  return response.data;
+};
+
+export const isMovieInWatchlist = async (movieId: string) => {
+  const response = await axiosInstance.get(`/movies/${movieId}/watchlist/status`);
+  return response.data;
+};
+
+export const isMovieInFavorites = async (movieId: string) => {
+  const response = await axiosInstance.get(`/movies/${movieId}/favorite/status`);
+  return response.data;
+};
