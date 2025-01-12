@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router';
 import { getMovieDetail } from '../api/movieApi';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebaseSetup';
 import Navbar from '../components/Navbar';
 import MovieList from '../components/MovieList';
 import ProfileImage from '../components/ProfileImage';
@@ -9,9 +12,12 @@ import heartIcon from '../assets/icons/heart.svg';
 import bookmarkIcon from '../assets/icons/bookmark.svg';
 import ActionButton from '../components/ActionButton';
 import Footer from '../components/Footer';
+import ReviewForm from '../components/ReviewForm';
 
 const MovieDetail = () => {
   const { id } = useParams();
+  const [user] = useAuthState(auth);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const { data: movie, isLoading, isError } = useQuery({
     queryKey: ['movie', id],
@@ -193,7 +199,7 @@ const MovieDetail = () => {
                             path={person.profile_path}
                             name={person.name}
                             className="w-full h-[175px] object-cover"
-                            type="people"
+                            type="tmdbPath"
                           />
                         </div>
                         <h3 className="mt-2 font-semibold line-clamp-2">{person.name}</h3>
@@ -205,31 +211,72 @@ const MovieDetail = () => {
               </div>
             </div>
 
-            {/* Crew Section */}
+            {/* Reviews Section */}
             <div className="max-w-8xl mx-auto px-4 pb-12">
-              <h2 className="text-2xl font-bold mb-6">Featured Crew</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {movie.credits?.crew?.filter((person: any) =>
-                  ['Director', 'Screenplay', 'Story', 'Writer', 'Characters'].includes(person.job)
-                ).slice(0, 6).map((person: any) => (
-                  <Link
-                    key={person.id}
-                    to={`/person/${person.id}`}
-                    className="hover:opacity-75 transition-opacity"
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">Reviews</h2>
+                {user && (
+                  <button
+                    onClick={() => setShowReviewForm(true)}
+                    className="text-tmdbLightBlue hover:text-tmdbLightBlue/80"
                   >
-                    <div className="rounded-lg overflow-hidden">
-                      <ProfileImage
-                        path={person.profile_path}
-                        name={person.name}
-                        className="w-full aspect-[2/3] object-cover"
-                        type="people"
-                      />
-                    </div>
-                    <h3 className="mt-2 font-semibold line-clamp-2">{person.name}</h3>
-                    <p className="text-sm text-gray-500">{person.job}</p>
-                  </Link>
-                ))}
+                    Write a Review
+                  </button>
+                )}
               </div>
+
+              {/* Review Form Modal */}
+              {showReviewForm && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+                    <h3 className="text-xl font-bold mb-4">Write a Review</h3>
+                    <ReviewForm movieId={id as string} onClose={() => setShowReviewForm(false)} />
+                  </div>
+                </div>
+              )}
+
+              {movie.reviews?.length > 0 ? (
+                <div className="space-y-8">
+                  {[...movie.reviews]
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    .slice(0, 3)
+                    .map((review: any) => (
+                      <div key={review.id} className="bg-white rounded-lg p-6 shadow">
+                        <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0">
+                            <ProfileImage
+                              path={review.author_details?.avatar_path}
+                              name={review.author}
+                              className="w-16 h-16 rounded-full"
+                              type="mixedPath"
+                            />
+                          </div>
+                          <div className="flex-grow">
+                            <div className="flex items-center justify-between mb-2">
+                              <h3 className="font-bold text-lg">A review by {review.author}</h3>
+                              {review.author_details?.rating && (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm">Rating:</span>
+                                  <CircularRating rating={review.author_details.rating} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-gray-500 text-sm mb-4">
+                              Written on {new Date(review.created_at).toLocaleDateString()}
+                            </p>
+                            <div className="prose prose-sm max-w-none">
+                              <p>{review.content}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  We don't have any reviews for {movie.title} yet.
+                </div>
+              )}
             </div>
 
             {/* Similar Movies */}

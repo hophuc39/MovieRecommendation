@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
 import { FilterQuery, Model, ObjectId, Types } from 'mongoose';
@@ -77,8 +77,6 @@ export class MovieService {
     limit: number = 20
   ): Promise<PaginationResult<Movie>> {
     const skip = (page - 1) * limit;
-    console.log(filter);
-
 
     const [items, total] = await Promise.all([
       this.movieModel.find(filter)
@@ -212,5 +210,31 @@ export class MovieService {
       page: Math.floor(offset / limit) + 1,
       totalPages: Math.ceil(total / limit)
     };
+  }
+
+  async createReview(movieId: string, reviewData: { content: string; rating: number }, user: any): Promise<any> {
+    const movie = await this.movieModel.findOne({ tmdb_id: parseInt(movieId) });
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
+
+    const review = {
+      author: user.name || user.email,
+      author_details: {
+        name: user.name,
+        username: user.email,
+        avatar_path: user.picture,
+        rating: reviewData.rating
+      },
+      content: reviewData.content,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      url: '',
+    };
+
+    movie.reviews.push(review);
+    await movie.save();
+
+    return review;
   }
 }

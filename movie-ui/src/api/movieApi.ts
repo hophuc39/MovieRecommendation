@@ -71,3 +71,8 @@ export const getPeople = async (params: GetPeopleParams) => {
   const response = await axiosInstance.get('/people', { params });
   return response.data;
 };
+
+export const createMovieReview = async (movieId: string, data: { content: string; rating: number }) => {
+  const response = await axiosInstance.post(`/movies/${movieId}/reviews`, data);
+  return response.data;
+};

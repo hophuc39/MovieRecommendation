@@ -4,10 +4,25 @@ import { HydratedDocument } from 'mongoose';
 
 export type MovieDocument = HydratedDocument<Movie>;
 
+// Thêm interface cho Review
+interface Review {
+  author: string;
+  author_details: {
+    name: string;
+    username: string;
+    avatar_path: string;
+    rating: number;
+  };
+  content: string;
+  created_at: string;
+  updated_at: string;
+  url: string;
+}
+
 @Schema({ collection: 'movies' })
 export class Movie {
   @Prop({ required: true })
-  tmdbId: number;
+  tmdb_id: number;
 
   @Prop()
   adult: boolean;
@@ -203,7 +218,24 @@ export class Movie {
       official: boolean;
       publishedAt: string;
     }[];
+
+    reviews: Review[];
   };
+
+  @Prop([{
+    author: String,
+    author_details: {
+      name: String,
+      username: String,
+      avatar_path: String,
+      rating: Number
+    },
+    content: String,
+    created_at: String,
+    updated_at: String,
+    url: String
+  }])
+  reviews: Review[];
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);

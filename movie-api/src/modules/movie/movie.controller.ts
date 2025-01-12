@@ -1,5 +1,7 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { MovieService } from './movie.service';
+import { AuthGuard } from '@nestjs/passport';
+import { FirebaseAuthGuard } from '../firebase/firebase-auth.guard';
 
 @Controller('movies')
 export class MovieController {
@@ -78,6 +80,16 @@ export class MovieController {
     @Query('offset') offset: number = 0
   ) {
     return this.movieService.getSimilarMovies(tmdbId, limit, offset);
+  }
+
+  @Post(':id/reviews')
+  @UseGuards(FirebaseAuthGuard)
+  async createReview(
+    @Param('id') id: string,
+    @Body() reviewData: { content: string; rating: number },
+    @Req() req: any
+  ) {
+    return this.movieService.createReview(id, reviewData, req.user);
   }
 }
 

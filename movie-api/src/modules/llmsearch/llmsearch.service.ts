@@ -18,18 +18,6 @@ export class LlmsearchService {
 
     }
 
-    //  private setupInterceptors() {
-    //     this.httpService.axiosRef.interceptors.request.use((config) => {
-    //       console.log('Final URL:', config.url); // URL cuối cùng
-    //       console.log('Method:', config.method); // Phương thức HTTP
-    //       console.log('Headers:', config.headers); // Header của request
-    //       console.log('Body:', config.data); // Body của request (nếu có)
-    //       return config;
-    //     }, (error) => {
-    //       console.error('Request Error:', error);
-    //       return Promise.reject(error);
-    //     });
-    //   }
     private apikey = process.env.LLM_API_KEY;
     private url = process.env.LLM_API_URL || "http://awd-llm.azurewebsites.net";
 
@@ -117,7 +105,7 @@ export class LlmsearchService {
     }
     async searchMovies(query: string, amount?: number, threshold?: number) {
         try {
-            const queryResponse = await this.fetchData("movies",query, amount ??10, threshold??0.5);
+            const queryResponse = await this.fetchData("movies", query, amount ?? 10, threshold ?? 0.5);
             const movies_id = queryResponse.result;
             return movies_id;
         } catch (error) {
@@ -131,7 +119,7 @@ export class LlmsearchService {
     }
     async searchSimilarMovies(query: string, amount?: number, threshold?: number) {
         try {
-            const queryResponse = await this.fetchData("similar",query, amount ??10, threshold??0.5);
+            const queryResponse = await this.fetchData("similar", query, amount ?? 10, threshold ?? 0.5);
             const movies_id = queryResponse.result;
             return movies_id;
         } catch (error) {

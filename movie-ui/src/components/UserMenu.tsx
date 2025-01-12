@@ -38,7 +38,7 @@ const UserMenu = () => {
           path={user.photoURL || null}
           name={user.displayName || 'User'}
           className="w-full h-full object-cover"
-          type="user"
+          type="otherPath"
         />
       </button>
 
