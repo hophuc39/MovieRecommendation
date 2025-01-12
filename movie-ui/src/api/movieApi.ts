@@ -44,3 +44,30 @@ export const getPeopleDetail = async (id: string) => {
   const response = await axiosInstance.get(`/people/${id}`);
   return response.data;
 };
+
+interface GetMoviesParams {
+  sort?: string;
+  genres?: string;
+  minUserScore?: number;
+  minUserVotes?: number;
+  page?: number;
+}
+
+export const getMovies = async (params: GetMoviesParams) => {
+  const response = await axiosInstance.get('/movies', { params });
+  return response.data;
+};
+
+export const getGenres = async () => {
+  const response = await axiosInstance.get('/movies/genres');
+  return response.data;
+};
+
+interface GetPeopleParams {
+  page?: number;
+}
+
+export const getPeople = async (params: GetPeopleParams) => {
+  const response = await axiosInstance.get('/people', { params });
+  return response.data;
+};

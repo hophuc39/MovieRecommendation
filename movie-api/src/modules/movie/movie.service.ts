@@ -70,31 +70,99 @@ export class MovieService {
     return { recommendations: moviesWithScores };
   }
 
-  async getAllMovies(filter: FilterQuery<MovieGenre> = {}, limit?: number, offset?: number): Promise<PaginationResult<Movie>> {
-    return paginate<Movie>(this.movieModel, filter, limit, offset);
+  async getAllMovies(
+    filter: FilterQuery<Movie> = {},
+    sort: any = { popularity: -1 },
+    page: number = 1,
+    limit: number = 20
+  ): Promise<PaginationResult<Movie>> {
+    const skip = (page - 1) * limit;
+    console.log(filter);
+
+
+    const [items, total] = await Promise.all([
+      this.movieModel.find(filter)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec(),
+      this.movieModel.countDocuments(filter)
+    ]);
+
+    return {
+      items,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
+    };
   }
 
   async getAllMovieGenres(): Promise<MovieGenre[]> {
     return this.movieGenreModel.find().exec();
   }
 
-  async getAllMoviesTrendingDay(filter: FilterQuery<MovieTrendingDay> = {}, limit?: number, offset?: number): Promise<PaginationResult<MovieTrendingDay>> {
-    return paginate<MovieTrendingDay>(this.movieTrendingDayModel, filter, limit, offset);
+  async getAllMoviesTrendingDay(
+    filter: FilterQuery<MovieTrendingDay> = {},
+    limit?: number,
+    offset?: number
+  ): Promise<PaginationResult<MovieTrendingDay>> {
+    const skip = offset || 0;
+    const take = limit || 20;
+
+    const [items, total] = await Promise.all([
+      this.movieTrendingDayModel.find(filter)
+        .skip(skip)
+        .limit(take)
+        .lean()
+        .exec(),
+      this.movieTrendingDayModel.countDocuments(filter)
+    ]);
+
+    return {
+      items,
+      total,
+      page: Math.floor(skip / take) + 1,
+      totalPages: Math.ceil(total / take)
+    };
   }
 
-  async getAllMoviesTrendingWeek(filter: FilterQuery<MovieTrendingWeek> = {}, limit?: number, offset?: number): Promise<PaginationResult<MovieTrendingWeek>> {
-    return paginate<MovieTrendingWeek>(this.movieTrendingWeekModel, filter, limit, offset);
+  async getAllMoviesTrendingWeek(
+    filter: FilterQuery<MovieTrendingWeek> = {},
+    limit?: number,
+    offset?: number
+  ): Promise<PaginationResult<MovieTrendingWeek>> {
+    const skip = offset || 0;
+    const take = limit || 20;
+
+    const [items, total] = await Promise.all([
+      this.movieTrendingWeekModel.find(filter)
+        .skip(skip)
+        .limit(take)
+        .lean()
+        .exec(),
+      this.movieTrendingWeekModel.countDocuments(filter)
+    ]);
+
+    return {
+      items,
+      total,
+      page: Math.floor(skip / take) + 1,
+      totalPages: Math.ceil(total / take)
+    };
   }
 
   async getLatestTrailers(): Promise<Movie[]> {
-    return this.movieModel.find().sort({ 'trailers.publishedAt': -1 }).limit(5).exec();
+    return this.movieModel.find()
+      .sort({ 'trailers.publishedAt': -1 })
+      .limit(5)
+      .exec();
   }
 
-  async getMovieDetail(id: string): Promise<any> {
-    const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
+  async getMovieDetail(id: string): Promise<Movie | null> {
+    return this.movieModel.findOne({ tmdb_id: parseInt(id) })
       .lean()
       .exec();
-    return movie;
   }
 
   async getMovieCredits(id: string) {
@@ -106,36 +174,43 @@ export class MovieService {
     return movie?.credits;
   }
 
-  async getSimilarMovies(id: string, limit: number = 20, offset: number = 0) {
+  async getSimilarMovies(
+    id: string,
+    limit: number = 20,
+    offset: number = 0
+  ): Promise<PaginationResult<Movie>> {
     const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
       .select('genres')
       .lean()
       .exec();
 
     if (!movie) {
-      return { items: [], total: 0 };
+      return { items: [], total: 0, page: 1, totalPages: 0 };
     }
 
     const genreIds = movie.genres.map(g => g.id);
 
-    const similarMovies = await this.movieModel.find({
-      tmdb_id: { $ne: parseInt(id) },
-      'genres.id': { $in: genreIds }
-    })
-      .sort({ popularity: -1 })
-      .skip(offset)
-      .limit(limit)
-      .lean()
-      .exec();
-
-    const total = await this.movieModel.countDocuments({
-      tmdb_id: { $ne: parseInt(id) },
-      'genres.id': { $in: genreIds }
-    });
+    const [items, total] = await Promise.all([
+      this.movieModel.find({
+        tmdb_id: { $ne: parseInt(id) },
+        'genres.id': { $in: genreIds }
+      })
+        .sort({ popularity: -1 })
+        .skip(offset)
+        .limit(limit)
+        .lean()
+        .exec(),
+      this.movieModel.countDocuments({
+        tmdb_id: { $ne: parseInt(id) },
+        'genres.id': { $in: genreIds }
+      })
+    ]);
 
     return {
-      items: similarMovies,
-      total
+      items,
+      total,
+      page: Math.floor(offset / limit) + 1,
+      totalPages: Math.ceil(total / limit)
     };
   }
 }

@@ -6,16 +6,38 @@ export class MovieController {
   constructor(private movieService: MovieService) { }
 
   @Get()
-  async getAllMovies(
-    @Query('limit') limit: number,
-    @Query('offset') offset: number,
+  async getMovies(
+    @Query('sort') sort: string = 'popularity.desc',
+    @Query('genres') genres: string,
+    @Query('minUserScore') minUserScore: string = '0',
+    @Query('minUserVotes') minUserVotes: string = '0',
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '20',
   ) {
-    return await this.movieService.getAllMovies(null, limit = limit, offset = offset);
+    const genreIds = genres ? genres.split(',').map(id => parseInt(id)) : [];
+
+    const filter = {
+      ...(genreIds.length > 0 && { 'genres.id': { $in: genreIds } }),
+      ...(parseFloat(minUserScore) > 0 && { "vote_average": { $gte: parseFloat(minUserScore) } }),
+      ...(parseInt(minUserVotes) > 0 && { "vote_count": { $gte: parseInt(minUserVotes) } }),
+    };
+
+    const [sortField, sortOrder] = sort.split('.');
+    const sortOptions = {
+      [sortField]: sortOrder === 'desc' ? -1 : 1
+    };
+
+    return this.movieService.getAllMovies(
+      filter,
+      sortOptions,
+      parseInt(page),
+      parseInt(limit)
+    );
   }
 
   @Get('genres')
   async getAllMovieGenres() {
-    return await this.movieService.getAllMovieGenres();
+    return this.movieService.getAllMovieGenres();
   }
 
   @Get('trending/day')
@@ -23,7 +45,7 @@ export class MovieController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
-    return await this.movieService.getAllMoviesTrendingDay(null, limit = limit, offset = offset);
+    return this.movieService.getAllMoviesTrendingDay(null, limit, offset);
   }
 
   @Get('trending/week')
@@ -31,15 +53,7 @@ export class MovieController {
     @Query('limit') limit: number,
     @Query('offset') offset: number,
   ) {
-    return await this.movieService.getAllMoviesTrendingWeek(null, limit = limit, offset = offset);
-  }
-
-  @Get('recommend')
-  async recommendMovies(
-    @Query('query') query: string,
-    @Query('topK') topK: number = 10
-  ) {
-    return this.movieService.getMovieSuggestions(query, topK);
+    return this.movieService.getAllMoviesTrendingWeek(null, limit, offset);
   }
 
   @Get('latest-trailers')
@@ -52,12 +66,18 @@ export class MovieController {
     return this.movieService.getMovieDetail(tmdbId);
   }
 
-  @Get('llm-recommend')
-  async llmrecommendMovies(
-    @Query('query') query: string,
-    @Query('amount') amount: number = 10
+  @Get(':id/credits')
+  async getMovieCredits(@Param('id') tmdbId: string) {
+    return this.movieService.getMovieCredits(tmdbId);
+  }
+
+  @Get(':id/similar')
+  async getSimilarMovies(
+    @Param('id') tmdbId: string,
+    @Query('limit') limit: number = 20,
+    @Query('offset') offset: number = 0
   ) {
-    return this.movieService.getLLMMovieSuggestions(query, amount);
+    return this.movieService.getSimilarMovies(tmdbId, limit, offset);
   }
 }
 

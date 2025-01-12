@@ -32,10 +32,7 @@ export const generatePaginationResult = <T>(
 ): PaginationResult<T> => {
   const result = new PaginationResult<T>();
 
-  result.offset = offset;
-  result.limit = limit;
   result.total = total;
-  result.hasNext = result.offset + result.limit < result.total;
   result.items = items;
 
   return result;

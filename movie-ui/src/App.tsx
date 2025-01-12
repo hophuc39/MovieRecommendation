@@ -19,6 +19,8 @@ import FullCastCrew from './pages/FullCastCrew';
 import Favorites from './pages/Favorites';
 import Watchlist from './pages/Watchlist';
 import PeopleDetail from './pages/PeopleDetail';
+import MovieList from './pages/MovieList';
+import PeopleList from './pages/PeopleList';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -50,7 +52,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* <Route path="/trending" element={<TrendingMovies />} /> */}
+            <Route path="/movies" element={<MovieList />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/search" element={<SearchMovies />} />
 
@@ -83,6 +85,7 @@ function App() {
               }
             />
             <Route path="/person/:id" element={<PeopleDetail />} />
+            <Route path="/people" element={<PeopleList />} />
           </Routes>
         </Router>
         <ToastContainer

@@ -6,6 +6,7 @@ import { auth } from "../firebaseSetup";
 import tmdbLogo from "../assets/tmdb-logo.png";
 import SearchContainer from "./SearchContainer";
 import UserMenu from "./UserMenu";
+import { Link } from "react-router";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="bg-tmdbDarkBlue relative z-50">
+      <header className="bg-tmdbDarkBlue sticky top-0 z-50">
         <nav className="max-w-8xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-8">
@@ -37,34 +38,27 @@ const Navbar = () => {
               />
 
               <div className="hidden md:flex space-x-6 text-white">
-                <div className="relative group">
-                  <button className="hover:text-tmdbLightBlue">Movies</button>
-                  <div className="absolute left-0 hidden group-hover:block w-48 bg-white shadow-lg py-2 mt-2 z-50">
-                    <a href="/movie/popular" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Popular</a>
-                    <a href="/movie/now-playing" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Now Playing</a>
-                    <a href="/movie/upcoming" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Upcoming</a>
-                    <a href="/movie/top-rated" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Top Rated</a>
-                  </div>
-                </div>
-
-                <div className="relative group">
-                  <button className="hover:text-tmdbLightBlue">TV Shows</button>
-                  <div className="absolute left-0 hidden group-hover:block w-48 bg-white shadow-lg py-2 mt-2 z-50">
-                    <a href="/tv/popular" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Popular</a>
-                    <a href="/tv/airing-today" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Airing Today</a>
-                    <a href="/tv/on-tv" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">On TV</a>
-                    <a href="/tv/top-rated" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Top Rated</a>
-                  </div>
-                </div>
+                <Link
+                  to="/movies"
+                  className="hover:text-tmdbLightBlue transition-colors"
+                >
+                  Movies
+                </Link>
+                <Link
+                  to="/people"
+                  className="hover:text-tmdbLightBlue transition-colors"
+                >
+                  People
+                </Link>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4 relative z-50">
+            <div className="flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={toggleSearch}
-                    className={`text-white hover:text-tmdbLightBlue transition-colors duration-200 ${isSearchOpen ? 'text-tmdbLightBlue' : ''}`}
+                    className="text-white hover:text-tmdbLightBlue"
                   >
                     {isSearchOpen ? (
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
