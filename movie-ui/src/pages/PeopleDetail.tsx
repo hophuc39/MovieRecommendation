@@ -57,7 +57,7 @@ const PeopleDetail = () => {
                 path={person.profile_path}
                 name={person.name}
                 className="w-full aspect-[2/3] object-cover"
-                type="people"
+                type="mixedPath"
               />
             </div>
             <h2 className="text-xl font-bold mb-2">Personal Info</h2>

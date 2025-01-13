@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useLoading } from "../contexts/LoadingContext";
+// import { useLoading } from "../contexts/LoadingContext";
 import { auth } from "../firebaseSetup";
 import tmdbLogo from "../assets/tmdb-logo.png";
 import SearchContainer from "./SearchContainer";
