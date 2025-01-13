@@ -1,6 +1,5 @@
 import { Controller, Get, Query, Param, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { MovieService } from './movie.service';
-import { AuthGuard } from '@nestjs/passport';
 import { FirebaseAuthGuard } from '../firebase/firebase-auth.guard';
 
 @Controller('movies')
@@ -21,7 +20,7 @@ export class MovieController {
   }
 
   @Get()
-  async getMovies(
+  async getMoviesWithFilters(
     @Query('sort') sort: string = 'popularity.desc',
     @Query('genres') genres: string,
     @Query('minUserScore') minUserScore: string = '0',
@@ -50,6 +49,12 @@ export class MovieController {
       parseInt(page),
       parseInt(limit)
     );
+  }
+
+  @Get('navigate')
+  @UseGuards(FirebaseAuthGuard)
+  async getNavigate(@Query('query') query: string) {
+    return this.movieService.getNavigate(query);
   }
 
   @Get('genres')

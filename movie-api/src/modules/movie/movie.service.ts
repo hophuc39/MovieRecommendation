@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
 import { FilterQuery, Model } from 'mongoose';
@@ -18,6 +18,7 @@ export class MovieService {
   private readonly embeddingApiUrl = 'https://python-embedding-service.onrender.com/embed';
   constructor(
     private readonly pineconeService: PineconeService,
+    @Inject(forwardRef(() => LlmsearchService))
     private readonly llmService: LlmsearchService,
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
     @InjectModel(MovieGenre.name) private movieGenreModel: Model<MovieGenre>,
@@ -167,6 +168,12 @@ export class MovieService {
       .exec();
   }
 
+  async getMovieDetailByObjectId(id: string): Promise<any> {
+    return this.movieModel.findOne({ _id: id })
+      .lean()
+      .exec();
+  }
+
   async getMovieCredits(id: string) {
     const movie = await this.movieModel.findOne({ tmdb_id: parseInt(id) })
       .select('credits')
@@ -197,7 +204,6 @@ export class MovieService {
         tmdb_id: { $ne: parseInt(id) },
         'genres.id': { $in: genreIds }
       })
-        .sort({ popularity: -1 })
         .skip(offset)
         .limit(limit)
         .lean()
@@ -330,5 +336,10 @@ export class MovieService {
     return this.movieModel.find({
       _id: { $in: results }
     }).lean();
+  }
+
+  async getNavigate(query: string): Promise<any> {
+    const results = await this.llmService.fetchNavigate(query);
+    return results;
   }
 }
