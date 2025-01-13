@@ -50,6 +50,7 @@ const FullCastCrew = () => {
                 <div key={person.id} className="flex gap-4">
                   <div className="w-16 h-16 flex-shrink-0">
                     <ProfileImage
+                      type='tmdbPath'
                       path={person.profile_path}
                       name={person.name}
                       className="w-full h-full object-cover rounded"
@@ -83,6 +84,7 @@ const FullCastCrew = () => {
                       <div key={person.id + person.job} className="flex gap-4">
                         <div className="w-16 h-16 flex-shrink-0">
                           <ProfileImage
+                            type='tmdbPath'
                             path={person.profile_path}
                             name={person.name}
                             className="w-full h-full object-cover rounded"

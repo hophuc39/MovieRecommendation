@@ -21,8 +21,8 @@ interface Review {
 
 @Schema({ collection: 'movies' })
 export class Movie {
-  @Prop({ required: true })
-  tmdb_id: number;
+  @Prop({ required: true, name: 'tmdb_id' })
+  tmdbId: number;
 
   @Prop()
   adult: boolean;

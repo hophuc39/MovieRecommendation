@@ -9,7 +9,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import MovieDetail from './pages/MovieDetail';
 import PrivateRoute from './pages/PrivateRoute';
-import SearchMovies from './pages/SearchMovie';
 import Dashboard from './pages/Dashboard';
 import { LoadingProvider } from './contexts/LoadingContext';
 import VerifyEmail from './pages/VerifyEmail';
@@ -21,6 +20,7 @@ import Watchlist from './pages/Watchlist';
 import PeopleDetail from './pages/PeopleDetail';
 import MovieList from './pages/MovieList';
 import PeopleList from './pages/PeopleList';
+import Search from './pages/Search';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -32,15 +32,6 @@ function App() {
     }
   }, [])
 
-  const handleStoreToken = (token: string) => {
-    setToken(token);
-    localStorage.setItem("token", token);
-  }
-
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem("token");
-  }
 
   const queryClient = new QueryClient();
 
@@ -54,7 +45,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/movies" element={<MovieList />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/search" element={<SearchMovies />} />
+            <Route path="/search" element={<Search />} />
 
             <Route
               path='/dashboard'

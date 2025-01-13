@@ -51,6 +51,7 @@ interface GetMoviesParams {
   minUserScore?: number;
   minUserVotes?: number;
   page?: number;
+  query?: string;
 }
 
 export const getMovies = async (params: GetMoviesParams) => {
@@ -104,5 +105,19 @@ export const isMovieInWatchlist = async (movieId: string) => {
 
 export const isMovieInFavorites = async (movieId: string) => {
   const response = await axiosInstance.get(`/movies/${movieId}/favorite/status`);
+  return response.data;
+};
+
+export const searchMovies = async (query: string) => {
+  const response = await axiosInstance.get('/movies/search', {
+    params: { query }
+  });
+  return response.data;
+};
+
+export const searchMoviesWithLLM = async (query: string) => {
+  const response = await axiosInstance.get('/movies/llm-search', {
+    params: { query }
+  });
   return response.data;
 };

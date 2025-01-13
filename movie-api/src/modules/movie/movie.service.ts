@@ -1,7 +1,7 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Movie } from './schemas/movie.schema';
-import { FilterQuery, Model, ObjectId, Types } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { PaginationResult } from '../../lib/interfaces/pagination-result.interface';
 import { MovieGenre } from './schemas/movie-genre.schema';
 import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
@@ -222,6 +222,8 @@ export class MovieService {
       throw new NotFoundException('Movie not found');
     }
 
+
+
     const review = {
       author: user.name || user.email,
       author_details: {
@@ -236,8 +238,7 @@ export class MovieService {
       url: '',
     };
 
-    movie.reviews.push(review);
-    await movie.save();
+    await this.movieModel.updateOne({ tmdb_id: parseInt(movieId) }, { $push: { reviews: review } });
 
     return review;
   }
@@ -310,5 +311,24 @@ export class MovieService {
       movieId: parseInt(movieId)
     });
     return !!exists;
+  }
+
+  async searchMovies(query: string): Promise<Movie[]> {
+    return this.movieModel.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { overview: { $regex: query, $options: 'i' } }
+      ]
+    })
+      .sort({ popularity: -1 })
+      .limit(20)
+      .lean();
+  }
+
+  async searchMoviesWithLLM(query: string): Promise<any> {
+    const results = await this.llmService.searchMovies(query, 20);
+    return this.movieModel.find({
+      _id: { $in: results }
+    }).lean();
   }
 }

@@ -39,7 +39,7 @@ const Watchlist = () => {
       <Navbar />
       <div className="min-h-[calc(100vh-64px)] flex flex-col">
         <div className="flex-grow max-w-8xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">My Watchlist</h1>
+          <h1 className="text-3xl font-bold mb-8 text-center">My Watchlist</h1>
           {movies?.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {movies.map((movie: any) => (

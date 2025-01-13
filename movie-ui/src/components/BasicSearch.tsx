@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebaseSetup';
 
-const SearchContainer = () => {
-  const [user] = useAuthState(auth);
+const BasicSearch = () => {
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchInput.trim())}`);
+      navigate(`/movies?search=${encodeURIComponent(searchInput.trim())}`);
     }
   };
 
@@ -21,7 +18,7 @@ const SearchContainer = () => {
         type="text"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
-        placeholder="Describe the movie you're looking for..."
+        placeholder="Search for a movie, tv show, person......"
         className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
       />
       <button
@@ -34,4 +31,4 @@ const SearchContainer = () => {
   );
 };
 
-export default SearchContainer;
+export default BasicSearch; 

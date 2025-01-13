@@ -7,6 +7,19 @@ import { FirebaseAuthGuard } from '../firebase/firebase-auth.guard';
 export class MovieController {
   constructor(private movieService: MovieService) { }
 
+  @Get('search')
+  async searchMovies(@Query('query') query: string) {
+    console.log("searchMovies", query);
+    return this.movieService.searchMovies(query);
+  }
+
+  @Get('llm-search')
+  @UseGuards(FirebaseAuthGuard)
+  async searchMoviesWithLLM(@Query('query') query: string) {
+    console.log("searchMoviesWithLLM", query);
+    return this.movieService.searchMoviesWithLLM(query);
+  }
+
   @Get()
   async getMovies(
     @Query('sort') sort: string = 'popularity.desc',
@@ -15,6 +28,7 @@ export class MovieController {
     @Query('minUserVotes') minUserVotes: string = '0',
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '20',
+    @Query('query') query: string
   ) {
     const genreIds = genres ? genres.split(',').map(id => parseInt(id)) : [];
 
@@ -22,6 +36,7 @@ export class MovieController {
       ...(genreIds.length > 0 && { 'genres.id': { $in: genreIds } }),
       ...(parseFloat(minUserScore) > 0 && { "vote_average": { $gte: parseFloat(minUserScore) } }),
       ...(parseInt(minUserVotes) > 0 && { "vote_count": { $gte: parseInt(minUserVotes) } }),
+      ...(query && { "title": { $regex: query, $options: 'i' } }),
     };
 
     const [sortField, sortOrder] = sort.split('.');

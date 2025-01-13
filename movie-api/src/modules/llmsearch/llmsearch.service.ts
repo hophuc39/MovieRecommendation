@@ -103,9 +103,12 @@ export class LlmsearchService {
             throw error;
         }
     }
+
     async searchMovies(query: string, amount?: number, threshold?: number) {
         try {
             const queryResponse = await this.fetchData("movies", query, amount ?? 10, threshold ?? 0.5);
+            console.log(queryResponse);
+
             const movies_id = queryResponse.result;
             return movies_id;
         } catch (error) {

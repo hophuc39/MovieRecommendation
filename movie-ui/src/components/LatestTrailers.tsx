@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { getLatestTrailers } from "../api/movieApi";
-import { useLoading } from "../contexts/LoadingContext";
 
 const LatestTrailers = () => {
-  const { showLoading, hideLoading } = useLoading();
   const [selectedBackground, setSelectedBackground] = useState("");
   const [selectedTrailer, setSelectedTrailer] = useState<{
     key: string;
@@ -25,12 +23,10 @@ const LatestTrailers = () => {
   const { data: trailers } = useQuery({
     queryKey: ["latest-trailers"],
     queryFn: async () => {
-      showLoading();
       try {
         const response = await getLatestTrailers();
         return response;
       } finally {
-        hideLoading();
       }
     }
   });

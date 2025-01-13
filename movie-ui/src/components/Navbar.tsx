@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useLoading } from "../contexts/LoadingContext";
 import { auth } from "../firebaseSetup";
 import tmdbLogo from "../assets/tmdb-logo.png";
-import SearchContainer from "./SearchContainer";
 import UserMenu from "./UserMenu";
 import { Link } from "react-router";
 
@@ -85,7 +83,6 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      {user && <SearchContainer isOpen={isSearchOpen} />}
     </>
   );
 };

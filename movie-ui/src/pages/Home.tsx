@@ -1,3 +1,5 @@
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebaseSetup';
 import Navbar from "../components/Navbar";
 import TrendingMovies from "../components/TrendingMovies";
 import LatestTrailers from "../components/LatestTrailers";
@@ -5,8 +7,14 @@ import Footer from '../components/Footer';
 import { useQuery } from '@tanstack/react-query';
 import { getMovies } from '../api/movieApi';
 import MovieList from '../components/MovieList';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const Home = () => {
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
+  const [basicSearchInput, setBasicSearchInput] = useState('');
+  const [aiSearchInput, setAiSearchInput] = useState('');
   const { data: popularMovies } = useQuery({
     queryKey: ['popular-movies'],
     queryFn: () => getMovies({
@@ -14,6 +22,20 @@ const Home = () => {
       page: 1
     })
   });
+
+  const handleBasicSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (basicSearchInput.trim()) {
+      navigate(`/movies?search=${encodeURIComponent(basicSearchInput.trim())}`);
+    }
+  };
+
+  const handleAISearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (aiSearchInput.trim()) {
+      navigate(`/search?q=${encodeURIComponent(aiSearchInput.trim())}`);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,16 +51,46 @@ const Home = () => {
               Millions of movies, TV shows and people to discover. Explore now.
             </h2>
 
-            {/* Search Bar */}
-            <div className="flex">
-              <input
-                type="text"
-                placeholder="Search for a movie, tv show, person......"
-                className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
-              />
-              <button className="px-8 py-4 bg-gradient-to-r from-tmdbLightGreen to-tmdbLightBlue text-white rounded-r-full font-bold hover:opacity-90">
-                Search
-              </button>
+            {/* Search Section */}
+            <div className="space-y-4">
+              {/* Basic Search */}
+              <form onSubmit={handleBasicSearch} className="flex">
+                <input
+                  type="text"
+                  value={basicSearchInput}
+                  onChange={(e) => setBasicSearchInput(e.target.value)}
+                  placeholder="Search for a movie, tv show, person......"
+                  className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className={`px-8 py-4 ${user
+                    ? 'bg-tmdbDarkBlue text-white'
+                    : 'bg-white text-tmdbDarkBlue'
+                    } rounded-r-full font-bold hover:opacity-90`}
+                >
+                  Search
+                </button>
+              </form>
+
+              {/* AI Search */}
+              {user && (
+                <form onSubmit={handleAISearch} className="flex">
+                  <input
+                    type="text"
+                    value={aiSearchInput}
+                    onChange={(e) => setAiSearchInput(e.target.value)}
+                    placeholder="Describe any movie you're looking for..."
+                    className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    className="px-8 py-4 bg-gradient-to-r from-tmdbLightGreen to-tmdbLightBlue text-white rounded-r-full font-bold hover:opacity-90"
+                  >
+                    AI Search
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>
