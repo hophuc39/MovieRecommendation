@@ -121,3 +121,10 @@ export const searchMoviesWithLLM = async (query: string) => {
   });
   return response.data;
 };
+
+export const getNavigate = async (query: string) => {
+  const response = await axiosInstance.get('/movies/navigate', {
+    params: { query }
+  });
+  return response.data;
+};

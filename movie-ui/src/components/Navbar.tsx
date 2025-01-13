@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebaseSetup";
@@ -9,11 +8,6 @@ import { Link } from "react-router";
 const Navbar = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
 
   return (
     <>
@@ -47,20 +41,6 @@ const Navbar = () => {
             <div className="flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <button
-                    onClick={toggleSearch}
-                    className="text-white hover:text-tmdbLightBlue"
-                  >
-                    {isSearchOpen ? (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    )}
-                  </button>
                   <UserMenu />
                 </div>
               ) : (

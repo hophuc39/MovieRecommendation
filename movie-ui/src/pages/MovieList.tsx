@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 // import { useSearchParams } from 'react-router';
 import Navbar from '../components/Navbar';
 import MovieFilter from '../components/MovieFilter';
-import { getMovies, getGenres, searchMovies } from '../api/movieApi';
+import { getMovies, getGenres } from '../api/movieApi';
 import MovieCard from '../components/MovieCard';
 import Footer from '../components/Footer';
+import { useSearchParams } from 'react-router';
 
 const MovieList = () => {
   const [searchParams, setSearchParams] = useSearchParams();

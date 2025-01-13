@@ -5,7 +5,7 @@ import TrendingMovies from "../components/TrendingMovies";
 import LatestTrailers from "../components/LatestTrailers";
 import Footer from '../components/Footer';
 import { useQuery } from '@tanstack/react-query';
-import { getMovies } from '../api/movieApi';
+import { getMovies, getNavigate } from '../api/movieApi';
 import MovieList from '../components/MovieList';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -15,6 +15,9 @@ const Home = () => {
   const navigate = useNavigate();
   const [basicSearchInput, setBasicSearchInput] = useState('');
   const [aiSearchInput, setAiSearchInput] = useState('');
+  const [aiNavigateInput, setAiNavigateInput] = useState('');
+  const [isLoadingNavigate, setIsLoadingNavigate] = useState(false);
+
   const { data: popularMovies } = useQuery({
     queryKey: ['popular-movies'],
     queryFn: () => getMovies({
@@ -34,6 +37,26 @@ const Home = () => {
     e.preventDefault();
     if (aiSearchInput.trim()) {
       navigate(`/search?q=${encodeURIComponent(aiSearchInput.trim())}`);
+    }
+  };
+
+  const handleAINavigate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (aiNavigateInput.trim()) {
+      setIsLoadingNavigate(true);
+      const result = await getNavigate(aiNavigateInput.trim());
+      console.log(result);
+      if (result.is_success) {
+        switch (result.route) {
+          case 'CAST_PAGE':
+            navigate(`/movie/${result.movie_id}/cast`);
+            break;
+          case 'MOVIE_PAGE':
+            navigate(`/movie/${result.movie_id}`);
+            break;
+        }
+      }
+      setIsLoadingNavigate(false);
     }
   };
 
@@ -64,7 +87,7 @@ const Home = () => {
                 />
                 <button
                   type="submit"
-                  className={`px-8 py-4 ${user
+                  className={`w-[160px] px-8 py-4 ${user
                     ? 'bg-tmdbDarkBlue text-white'
                     : 'bg-white text-tmdbDarkBlue'
                     } rounded-r-full font-bold hover:opacity-90`}
@@ -80,14 +103,36 @@ const Home = () => {
                     type="text"
                     value={aiSearchInput}
                     onChange={(e) => setAiSearchInput(e.target.value)}
-                    placeholder="Describe any movie you're looking for..."
+                    placeholder="Describe any movie you're looking for, eg. 'Romantic Comedy Movie'"
                     className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="px-8 py-4 bg-gradient-to-r from-tmdbLightGreen to-tmdbLightBlue text-white rounded-r-full font-bold hover:opacity-90"
+                    className="w-[160px] px-8 py-4 bg-gradient-to-r from-tmdbLightGreen to-tmdbLightBlue text-white rounded-r-full font-bold hover:opacity-90"
                   >
                     AI Search
+                  </button>
+                </form>
+              )}
+
+              {/* AI Navigation */}
+              {user && (
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAINavigate(e);
+                }} className="flex">
+                  <input
+                    type="text"
+                    value={aiNavigateInput}
+                    onChange={(e) => setAiNavigateInput(e.target.value)}
+                    placeholder="Describe where you want to visit in our systems, eg. 'Casts of Moana'"
+                    className="flex-1 px-6 py-4 rounded-l-full text-lg focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    className="w-[160px] px-8 py-4 bg-gradient-to-r from-tmdbDarkBlue to-tmdbLightGreen text-white rounded-r-full font-bold hover:opacity-90"
+                  >
+                    {isLoadingNavigate ? 'Navigating..' : 'AI Navigate'}
                   </button>
                 </form>
               )}

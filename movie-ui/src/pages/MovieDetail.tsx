@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router';
-import { getMovieDetail, toggleMovieWatchlist, toggleMovieFavorite, isMovieInWatchlist, isMovieInFavorites } from '../api/movieApi';
+import { getMovieDetail, toggleMovieWatchlist, toggleMovieFavorite, isMovieInWatchlist, isMovieInFavorites, getSimilarMovies } from '../api/movieApi';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseSetup';
 import Navbar from '../components/Navbar';
@@ -24,6 +24,12 @@ const MovieDetail = () => {
   const { data: movie, isLoading, isError } = useQuery({
     queryKey: ['movie', id],
     queryFn: () => getMovieDetail(id as string),
+    enabled: !!id
+  });
+
+  const { data: similarMovies, isLoading: similarMoviesLoading, isError: similarMoviesError } = useQuery({
+    queryKey: ['similarMovies', id],
+    queryFn: () => getSimilarMovies(id as string),
     enabled: !!id
   });
 
@@ -131,7 +137,7 @@ const MovieDetail = () => {
     <>
       <Navbar />
       <div className="min-h-[calc(100vh-64px)] flex flex-col">
-        <div className="flex-grow">
+        <div className="flex-grow mb-10">
           <div className="relative">
             {/* Hero Section with Backdrop */}
             <div
@@ -324,10 +330,20 @@ const MovieDetail = () => {
             </div>
 
             {/* Similar Movies */}
-            {movie.similarMovies?.items?.length > 0 && (
-              <div className="max-w-8xl mx-auto px-4 py-12">
+            {similarMoviesLoading && (
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-tmdbLightBlue"></div>
+              </div>
+            )}
+            {similarMoviesError && (
+              <div className="text-center py-8 text-gray-500">
+                We couldn't find any similar movies for {movie.title} yet.
+              </div>
+            )}
+            {similarMovies?.items?.length > 0 && (
+              <div className="max-w-8xl mx-auto px-4 py-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400/30 scrollbar-track-transparent">
                 <h2 className="text-2xl font-bold mb-6">Similar Movies</h2>
-                <MovieList movies={movie.similarMovies.items} />
+                <MovieList movies={similarMovies.items} />
               </div>
             )}
           </div>
