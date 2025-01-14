@@ -123,8 +123,13 @@ export const searchMoviesWithLLM = async (query: string) => {
 };
 
 export const getNavigate = async (query: string) => {
-  const response = await axiosInstance.get('/movies/navigate', {
+  const response = await axiosInstance.get('/llmsearch/navigate', {
     params: { query }
   });
   return response.data;
+};
+
+export const getMovieTmdbIdByObjectId = async (objectId: string) => {
+  const response = await axiosInstance.get(`/movies/${objectId}/tmdb_id`);
+  return response.data[0].tmdb_id;
 };

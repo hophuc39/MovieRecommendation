@@ -57,6 +57,11 @@ export class MovieController {
     return this.movieService.getNavigate(query);
   }
 
+  @Get(':objectId/tmdb_id')
+  async getMovieTmdbIdByObjectId(@Param('objectId') objectId: string) {
+    return this.movieService.getMovieTmdbIdByObjectId(objectId);
+  }
+
   @Get('genres')
   async getAllMovieGenres() {
     return this.movieService.getAllMovieGenres();

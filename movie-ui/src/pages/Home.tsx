@@ -5,7 +5,7 @@ import TrendingMovies from "../components/TrendingMovies";
 import LatestTrailers from "../components/LatestTrailers";
 import Footer from '../components/Footer';
 import { useQuery } from '@tanstack/react-query';
-import { getMovies, getNavigate } from '../api/movieApi';
+import { getMovies, getMovieTmdbIdByObjectId, getNavigate } from '../api/movieApi';
 import MovieList from '../components/MovieList';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -45,14 +45,14 @@ const Home = () => {
     if (aiNavigateInput.trim()) {
       setIsLoadingNavigate(true);
       const result = await getNavigate(aiNavigateInput.trim());
-      console.log(result);
       if (result.is_success) {
+        const movieId = await getMovieTmdbIdByObjectId(result.params.movie_ids[0]);
         switch (result.route) {
           case 'CAST_PAGE':
-            navigate(`/movie/${result.movie_id}/cast`);
+            navigate(`/movie/${movieId}/cast`);
             break;
           case 'MOVIE_PAGE':
-            navigate(`/movie/${result.movie_id}`);
+            navigate(`/movie/${movieId}`);
             break;
         }
       }

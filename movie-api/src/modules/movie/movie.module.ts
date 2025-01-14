@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MovieService } from './movie.service';
 import { MovieSchema } from './schemas/movie.schema';
@@ -24,7 +24,7 @@ import { FavoriteSchema } from './schemas/favorite.schema';
     ]),
     PineconeModule,
     FirebaseModule,
-    forwardRef(() => LlmsearchModule)
+    LlmsearchModule
   ],
   providers: [MovieService],
   controllers: [MovieController],

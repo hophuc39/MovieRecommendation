@@ -1,15 +1,11 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { MovieService } from '../movie/movie.service';
-import { log } from 'console';
 
 @Injectable()
 export class LlmsearchService {
     constructor(
         private readonly httpService: HttpService,
-        @Inject(forwardRef(() => MovieService))
-        private readonly movieService: MovieService,
     ) {
         try {
             console.log('Checking LLM API status...');
@@ -101,19 +97,8 @@ export class LlmsearchService {
             const response = await lastValueFrom(
                 this.httpService.post(url, {}, { params, headers }),
             );
-            console.log(response.data);
 
-            if (response.data.data.is_success) {
-                const movie = await this.movieService.getMovieDetailByObjectId(response.data.data.params.movie_ids[0]);
-
-                return {
-                    route: response.data.data.route,
-                    is_success: true,
-                    movie_id: movie.tmdb_id,
-                }
-            }
-
-            return response.data;
+            return response.data.data
         } catch (error) {
             console.error('Error:', error.message);
             throw error;
