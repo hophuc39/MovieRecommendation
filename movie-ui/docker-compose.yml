@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile
+    container_name: frontend-app
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
