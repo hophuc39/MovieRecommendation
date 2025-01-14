@@ -6,11 +6,13 @@ export class FirebaseService {
 
   constructor() {
     console.log('FirebaseService is being initialized');
-
+    const serviceAccount = JSON.parse(
+      process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
+    );
 
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert("./src/config/firebase-service-account.json"),
+        credential: admin.credential.cert(serviceAccount),
       });
     }
 
