@@ -24,7 +24,7 @@ import Search from './pages/Search';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
-
+  console.log(token);
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {

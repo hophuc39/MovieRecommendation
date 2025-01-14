@@ -1,5 +1,6 @@
 services:
   frontend:
+    image: nthuanreal/movie-ui
     build:
       dockerfile: Dockerfile
     container_name: frontend-app

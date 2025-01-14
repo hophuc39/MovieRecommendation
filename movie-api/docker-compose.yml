@@ -1,5 +1,6 @@
 services:
   backend:
+    image: nthuanreal/movie-api
     build:
       dockerfile: Dockerfile
     container_name: backend-api
