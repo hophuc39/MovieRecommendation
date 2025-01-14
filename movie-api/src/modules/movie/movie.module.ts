@@ -24,7 +24,7 @@ import { FavoriteSchema } from './schemas/favorite.schema';
     ]),
     PineconeModule,
     FirebaseModule,
-    LlmsearchModule
+    forwardRef(() => LlmsearchModule)
   ],
   providers: [MovieService],
   controllers: [MovieController],

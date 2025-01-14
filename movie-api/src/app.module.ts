@@ -14,9 +14,6 @@ import { LlmsearchModule } from './modules/llmsearch/llmsearch.module';
   controllers: [AppController],
   providers: [AppService],
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://movie-recommendation-admin:Movie-Recommendation@movie-recommendation.n1y3e.mongodb.net/?retryWrites=true&w=majority&appName=movie-recommendation'),
-    // MongooseModule.forRoot('mongodb://hophuc:123123@localhost:27017/movie_recommendation?directConnection=true'),
-    // MongooseModule.forRoot('mongodb+srv://movie-recommendation-admin:Movie-Recommendation@movie-recommendation.n1y3e.mongodb.net/movie_recommendation'),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     FirebaseModule,
