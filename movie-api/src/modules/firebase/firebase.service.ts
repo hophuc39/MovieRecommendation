@@ -7,9 +7,11 @@ export class FirebaseService {
 
   constructor() {
     console.log('FirebaseService is being initialized');
+    const serviceAccount = require('../../config/firebase-service-account.json');
+
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(require("../../../config/firebase-service-account.json")),
+        credential: admin.credential.cert(serviceAccount),
       });
     }
 
