@@ -8,9 +8,9 @@ import { MovieTrendingDay } from './schemas/movie-trending-day.schema';
 import { MovieTrendingWeek } from './schemas/movie-trending-week.schema';
 import axios from 'axios';
 import { PineconeService } from '../pinecone/pinecone.service';
-import { LlmsearchService } from "src/modules/llmsearch/llmsearch.service";
 import { Watchlist } from './schemas/watchlist.schema';
 import { Favorite } from './schemas/favorite.schema';
+import { LlmsearchService } from '../llmsearch/llmsearch.service';
 
 @Injectable()
 export class MovieService {
@@ -18,8 +18,7 @@ export class MovieService {
   private readonly embeddingApiUrl = 'https://python-embedding-service.onrender.com/embed';
   constructor(
     private readonly pineconeService: PineconeService,
-    @Inject(forwardRef(() => LlmsearchService))
-    private readonly llmService: LlmsearchService,
+    @Inject(forwardRef(() => LlmsearchService)) private readonly llmService: LlmsearchService,
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
     @InjectModel(MovieGenre.name) private movieGenreModel: Model<MovieGenre>,
     @InjectModel(MovieTrendingDay.name) private movieTrendingDayModel: Model<MovieTrendingDay>,
