@@ -7,7 +7,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
 
   const corOptions: CorsOptions = {
-    origin: ['http://localhost:3000', 'http://localhost:4200'],
+    origin: ['http://localhost:3000', 'http://localhost:4200', 'https://movie-recommendation-jsap.vercel.app'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     maxAge: 24 * 60 * 60 * 5,
