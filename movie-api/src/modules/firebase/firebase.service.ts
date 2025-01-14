@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-
+import * as path from 'path';
 @Injectable()
 export class FirebaseService {
 
@@ -9,7 +9,7 @@ export class FirebaseService {
     console.log('FirebaseService is being initialized');
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(require("../../../config/firebase-service-account.json")),
+        credential: admin.credential.cert(require(path.join(__dirname, '../../../../config/firebase-service-account.json'))),
       });
     }
 

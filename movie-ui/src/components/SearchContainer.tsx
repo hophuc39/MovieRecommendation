@@ -7,13 +7,14 @@ const SearchContainer = () => {
   const [user] = useAuthState(auth);
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
-
+  console.log(user);
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchInput.trim())}`);
     }
   };
+  
 
   return (
     <form onSubmit={handleSearch} className="flex">

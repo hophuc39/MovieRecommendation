@@ -2,7 +2,7 @@
 FROM node:20
 
 # Thiết lập thư mục làm việc
-WORKDIR /app
+WORKDIR /application
 
 # Sao chép file package.json và package-lock.json
 COPY package*.json ./
