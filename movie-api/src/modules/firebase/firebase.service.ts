@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import * as path from 'path';
 @Injectable()
 export class FirebaseService {
 
   constructor() {
     console.log('FirebaseService is being initialized');
-    const serviceAccount = require('../../config/firebase-service-account.json');
+
 
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert("./src/config/firebase-service-account.json"),
       });
     }
 
