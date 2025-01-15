@@ -8,15 +8,25 @@ import { useQuery } from '@tanstack/react-query';
 import { getMovies, getMovieTmdbIdByObjectId, getNavigate } from '../api/movieApi';
 import MovieList from '../components/MovieList';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 const Home = () => {
+  const [searchParams] = useSearchParams();
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
   const [basicSearchInput, setBasicSearchInput] = useState('');
   const [aiSearchInput, setAiSearchInput] = useState('');
   const [aiNavigateInput, setAiNavigateInput] = useState('');
   const [isLoadingNavigate, setIsLoadingNavigate] = useState(false);
+
+  const mode = searchParams.get('mode');
+  const oobCode = searchParams.get('oobCode');
+
+  if (mode === 'verifyEmail' && oobCode) {
+    navigate(`/email-verified?oobCode=${oobCode}`);
+  } else if (mode === 'resetPassword' && oobCode) {
+    navigate(`/reset-password?oobCode=${oobCode}`);
+  }
 
   const { data: popularMovies } = useQuery({
     queryKey: ['popular-movies'],
