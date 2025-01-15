@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { auth } from "../firebaseSetup";
 import { useState } from "react";
 import { applyActionCode } from "firebase/auth";
@@ -9,6 +9,7 @@ const EmailVerified = () => {
   const [searchParams] = useSearchParams();
   const oobCode = searchParams.get('oobCode');
   const [isVerifying, setIsVerifying] = useState(true);
+  const navigate = useNavigate();
 
   const verifyCode = useCallback(async () => {
     if (!isVerifying) return;
@@ -18,6 +19,7 @@ const EmailVerified = () => {
       }
       await applyActionCode(auth, oobCode);
       toast.success('Email verified successfully');
+      navigate('/');
     } catch (error) {
       toast.error('Invalid or expired email verification link');
     } finally {
