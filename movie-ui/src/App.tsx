@@ -21,6 +21,7 @@ import PeopleDetail from './pages/PeopleDetail';
 import MovieList from './pages/MovieList';
 import PeopleList from './pages/PeopleList';
 import Search from './pages/Search';
+import EmailVerified from './pages/EmailVerified';
 
 function App() {
   const [token, setToken] = useState<null | string>(null);
@@ -56,6 +57,7 @@ function App() {
               }
             />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/email-verified" element={<EmailVerified />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/movie/:id/cast" element={<FullCastCrew />} />
